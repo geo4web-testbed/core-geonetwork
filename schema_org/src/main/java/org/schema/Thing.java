@@ -3,8 +3,6 @@
  */
 package org.schema;
 
-import org.schema.exception.IllegalArgumentException;
-
 /**
  * 
  * https://schema.org/Thing
@@ -25,7 +23,7 @@ public class Thing {
      * attribute - for multiple types. Schema.org tools may have only weaker
      * understanding of extra types, in particular those defined externally.
      */
-    private URL additionalType;
+    private String additionalType;
 
     /**
      * An alias for the item.
@@ -66,18 +64,18 @@ public class Thing {
      * identity. E.g. the URL of the item's Wikipedia page, Freebase page, or
      * official website.
      */
-    private URL sameAs;
+    private String sameAs;
 
     /**
      * URL of the item.
      */
-    private URL url;
+    private String url;
 
-    public URL getAdditionalType() {
+    public String getAdditionalType() {
         return additionalType;
     }
 
-    public void setAdditionalType(URL additionalType) {
+    public void setAdditionalType(String additionalType) {
         this.additionalType = additionalType;
     }
 
@@ -102,11 +100,12 @@ public class Thing {
     }
 
     public void setImage(Thing image) {
-        if (image instanceof ImageObject || image instanceof URL) {
+        if (image instanceof ImageObject) {
             this.image = image;
-        } else {
-            throw new IllegalArgumentException(
-                    new String[] { "ImageObject", "URL" });
+        } else { //URL == Text
+            //workaround as java.lang.String cannot be extended
+            this.image = new ImageObject();
+            this.image.setUrl(image.toString());
         }
     }
 
@@ -115,12 +114,12 @@ public class Thing {
     }
 
     public void setMainEntityOfPage(Thing mainEntityOfPage) {
-        if (mainEntityOfPage instanceof CreativeWork
-                || mainEntityOfPage instanceof URL) {
+        if (mainEntityOfPage instanceof CreativeWork) {
             this.mainEntityOfPage = mainEntityOfPage;
-        } else {
-            throw new IllegalArgumentException(
-                    new String[] { "CreativeWork", "URL" });
+        } else { //URL == Text
+            //workaround as java.lang.String cannot be extended
+            this.mainEntityOfPage = new CreativeWork();
+            this.mainEntityOfPage.setUrl(mainEntityOfPage.toString());
         }
     }
 
@@ -140,19 +139,19 @@ public class Thing {
         this.potentialAction = potentialAction;
     }
 
-    public URL getSameAs() {
+    public String getSameAs() {
         return sameAs;
     }
 
-    public void setSameAs(URL sameAs) {
+    public void setSameAs(String sameAs) {
         this.sameAs = sameAs;
     }
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

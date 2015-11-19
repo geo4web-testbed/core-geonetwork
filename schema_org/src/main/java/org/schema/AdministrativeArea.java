@@ -8,12 +8,12 @@ package org.schema;
  * 
  * TODO
  * 
- * https://schema.org/Place
+ * https://schema.org/AdministrativeArea
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class Place {
+public class AdministrativeArea {
 
 }

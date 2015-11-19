@@ -8,12 +8,12 @@ package org.schema;
  * 
  * TODO
  * 
- * https://schema.org/MediaObject
+ * https://schema.org/OpeningHoursSpecification
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class MediaObject {
+public class OpeningHoursSpecification {
 
 }

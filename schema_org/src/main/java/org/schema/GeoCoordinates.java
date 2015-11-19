@@ -8,12 +8,12 @@ package org.schema;
  * 
  * TODO
  * 
- * https://schema.org/URL
+ * https://schema.org/GeoCoordinates
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class URL extends Thing {
+public class GeoCoordinates extends StructuredValue {
 
 }

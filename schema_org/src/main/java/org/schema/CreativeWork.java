@@ -174,7 +174,7 @@ public class CreativeWork extends Thing {
     /**
      * A link to the page containing the comments of the CreativeWork.
      */
-    private URL discussionUrl;
+    private String discussionUrl;
 
     /**
      * Specifies the Person who edited the CreativeWork.
@@ -215,10 +215,9 @@ public class CreativeWork extends Thing {
     private String fileFormat;
 
     /**
-     * FIXME Genre of the creative work or group.
+     *  Genre of the creative work or group.
      */
     private String genre;
-    private URL genre2;
 
     /**
      * 
@@ -258,7 +257,7 @@ public class CreativeWork extends Thing {
      * be repeated for multiple sources. For example, http://
      * example.com/great-multiplication-intro.html.
      */
-    private URL isBasedOnUrl;
+    private String isBasedOnUrl;
 
     /**
      * Indicates whether this content is family friendly.
@@ -288,7 +287,7 @@ public class CreativeWork extends Thing {
      * FIXME A license document that applies to this content, typically
      * indicated by URL.
      */
-    private URL license;
+    private String license;
     private CreativeWork license2;
 
     /**
@@ -356,7 +355,7 @@ public class CreativeWork extends Thing {
      * Link to page describing the editorial principles of the organization
      * primarily responsible for the creation of the CreativeWork.
      */
-    private URL publishingPrinciples;
+    private String publishingPrinciples;
 
     /**
      * The Event where the CreativeWork was recorded.The CreativeWork may
@@ -378,13 +377,12 @@ public class CreativeWork extends Thing {
     private Review review;
 
     /**
-     * FIXME Indicates (by URL or string) a particular version of a schema used
+     * Indicates (by URL or string) a particular version of a schema used
      * in some CreativeWork. For example, a document could declare a
      * schemaVersion using a URL such as http://schema.org/version/2.0/ if
      * precise indication of schema version was required by some application.
      */
     private String schemaVersion;
-    private URL schemaVersion2;
 
     /**
      * The Organization on whose behalf the creator was working.
@@ -400,7 +398,7 @@ public class CreativeWork extends Thing {
     /**
      * A thumbnail image relevant to the Thing.
      */
-    private URL thumbnailUrl;
+    private String thumbnailUrl;
 
     /**
      * Approximate or typical time it takes to work with or through this
