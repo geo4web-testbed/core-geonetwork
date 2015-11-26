@@ -5,9 +5,10 @@ package org.schema;
 
 import java.util.Date;
 
+import org.schema.exception.IllegalArgumentException;
+
 /**
  * 
- * TODO
  * 
  * https://schema.org/CreativeWork
  * 
@@ -77,12 +78,11 @@ public class CreativeWork extends Thing {
     private AudioObject audio;
 
     /**
-     * FIXME The author of this content.Please note that author is special in
-     * that HTML 5 provides a special mechanism for indicating authorship via
-     * the rel tag. That is equivalent to this and may be used interchangeably.
+     * The author of this content.Please note that author is special in that
+     * HTML 5 provides a special mechanism for indicating authorship via the rel
+     * tag. That is equivalent to this and may be used interchangeably.
      */
-    private Person author;
-    private Organization author2;
+    private Thing author;
 
     /**
      * An award won by or for this item. Supersedes awards.
@@ -95,11 +95,10 @@ public class CreativeWork extends Thing {
     private Person character;
 
     /**
-     * FIXME A citation or reference to another creative work, such as another
+     * A citation or reference to another creative work, such as another
      * publication, web page, scholarly article, etc.
      */
-    private String citation;
-    private CreativeWork citation2;
+    private Object citation;
 
     /**
      * Comment Comments, typically from users.
@@ -129,16 +128,14 @@ public class CreativeWork extends Thing {
     private String contentRating;
 
     /**
-     * FIXME A secondary contributor to the CreativeWork.
+     * A secondary contributor to the CreativeWork.
      */
-    private Person contributor;
-    private Organization contributor2;
+    private Thing contributor;
 
     /**
-     * FIXME The party holding the legal copyright to the CreativeWork.
+     * The party holding the legal copyright to the CreativeWork.
      */
-    private Person copyrightHolder;
-    private Organization copyrightHolder2;
+    private Thing copyrightHolder;
 
     /**
      * The year during which the claimed copyright for the CreativeWork was
@@ -147,11 +144,10 @@ public class CreativeWork extends Thing {
     private Number copyrightYear;
 
     /**
-     * FIXME The creator/ author of this CreativeWork.This is the same as the
-     * Author property for CreativeWork.
+     * The creator/ author of this CreativeWork.This is the same as the Author
+     * property for CreativeWork.
      */
-    private Person creator;
-    private Organization creator2;
+    private Thing creator;
 
     /**
      * The date on which the CreativeWork was created or the item was added to a
@@ -215,7 +211,7 @@ public class CreativeWork extends Thing {
     private String fileFormat;
 
     /**
-     *  Genre of the creative work or group.
+     * Genre of the creative work or group.
      */
     private String genre;
 
@@ -232,12 +228,11 @@ public class CreativeWork extends Thing {
     private String headline;
 
     /**
-     * FIXME The language of the content or performance or used in an
-     * action.Please use one of the language codes from the IETF BCP 47
-     * standard.Supersedes language.
+     * The language of the content or performance or used in an action.Please
+     * use one of the language codes from the IETF BCP 47 standard.Supersedes
+     * language.
      */
-    private String inLanguage;
-    private Language inLanguage2;
+    private Object inLanguage;
 
     /**
      * The number of interactions for the CreativeWork using the WebSite or
@@ -284,11 +279,10 @@ public class CreativeWork extends Thing {
     private String learningResourceType;
 
     /**
-     * FIXME A license document that applies to this content, typically
-     * indicated by URL.
+     * A license document that applies to this content, typically indicated by
+     * URL.
      */
-    private String license;
-    private CreativeWork license2;
+    private Object license;
 
     /**
      * The location where the CreativeWork was created, which may not be the
@@ -319,26 +313,23 @@ public class CreativeWork extends Thing {
     private Offer offers;
 
     /**
-     * FIXME The position of an item in a series or sequence of items. private
+     * The position of an item in a series or sequence of items. private
      * producer Person or private Organization The person or organization who
      * produced the
      * 
      * work (e.g. music album, movie, tv/radio series etc.).
      */
-    private Integer position;
-    private String position2;
+    private String position;
 
     /**
-     * FIXME The service provider, service operator, or service performer; the
-     * goods
+     * The service provider, service operator, or service performer; the goods
      * 
      * producer. Another party (a seller) may offer those services or goods on
      * behalf of the provider. A provider may also serve as the seller.
      * Supersedes carrier.
      * 
      */
-    private Person provider;
-    private Organization provider2;
+    private Thing provider;
 
     /**
      * A publication event associated with the item.
@@ -346,10 +337,9 @@ public class CreativeWork extends Thing {
     private PublicationEvent publication;
 
     /**
-     * FIXME The publisher of the creative work.
+     * The publisher of the creative work.
      */
-    private Person publisher;
-    private Organization publisher2;
+    private Thing publisher;
 
     /**
      * Link to page describing the editorial principles of the organization
@@ -377,10 +367,10 @@ public class CreativeWork extends Thing {
     private Review review;
 
     /**
-     * Indicates (by URL or string) a particular version of a schema used
-     * in some CreativeWork. For example, a document could declare a
-     * schemaVersion using a URL such as http://schema.org/version/2.0/ if
-     * precise indication of schema version was required by some application.
+     * Indicates (by URL or string) a particular version of a schema used in
+     * some CreativeWork. For example, a document could declare a schemaVersion
+     * using a URL such as http://schema.org/version/2.0/ if precise indication
+     * of schema version was required by some application.
      */
     private String schemaVersion;
 
@@ -408,12 +398,10 @@ public class CreativeWork extends Thing {
     private Duration timeRequired;
 
     /**
-     * FIXME Organization or person who adapts a creative work to different
-     * languages, regional differences and technical requirements of a target
-     * market.
+     * Organization or person who adapts a creative work to different languages,
+     * regional differences and technical requirements of a target market.
      */
-    private Person translator;
-    private Organization translator2;
+    private Thing translator;
 
     /**
      * 
@@ -438,4 +426,591 @@ public class CreativeWork extends Thing {
      * property:exampleOfWork.
      */
     private CreativeWork workExample;
+
+    public Thing getAbout() {
+        return about;
+    }
+
+    public void setAbout(Thing about) {
+        this.about = about;
+    }
+
+    public String getAccessibilityAPI() {
+        return accessibilityAPI;
+    }
+
+    public void setAccessibilityAPI(String accessibilityAPI) {
+        this.accessibilityAPI = accessibilityAPI;
+    }
+
+    public String getAccessibilityControl() {
+        return accessibilityControl;
+    }
+
+    public void setAccessibilityControl(String accessibilityControl) {
+        this.accessibilityControl = accessibilityControl;
+    }
+
+    public String getAccessibilityFeature() {
+        return accessibilityFeature;
+    }
+
+    public void setAccessibilityFeature(String accessibilityFeature) {
+        this.accessibilityFeature = accessibilityFeature;
+    }
+
+    public String getAccessibilityHazard() {
+        return accessibilityHazard;
+    }
+
+    public void setAccessibilityHazard(String accessibilityHazard) {
+        this.accessibilityHazard = accessibilityHazard;
+    }
+
+    public Person getAccountablePerson() {
+        return accountablePerson;
+    }
+
+    public void setAccountablePerson(Person accountablePerson) {
+        this.accountablePerson = accountablePerson;
+    }
+
+    public AggregateRating getAggregateRating() {
+        return aggregateRating;
+    }
+
+    public void setAggregateRating(AggregateRating aggregateRating) {
+        this.aggregateRating = aggregateRating;
+    }
+
+    public String getAlternativeHeadline() {
+        return alternativeHeadline;
+    }
+
+    public void setAlternativeHeadline(String alternativeHeadline) {
+        this.alternativeHeadline = alternativeHeadline;
+    }
+
+    public MediaObject getAssociatedMedia() {
+        return associatedMedia;
+    }
+
+    public void setAssociatedMedia(MediaObject associatedMedia) {
+        this.associatedMedia = associatedMedia;
+    }
+
+    public Audience getAudience() {
+        return audience;
+    }
+
+    public void setAudience(Audience audience) {
+        this.audience = audience;
+    }
+
+    public AudioObject getAudio() {
+        return audio;
+    }
+
+    public void setAudio(AudioObject audio) {
+        this.audio = audio;
+    }
+
+    public Thing getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Thing author) {
+        if (author instanceof Organization || author instanceof Person) {
+            this.author = author;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public String getAward() {
+        return award;
+    }
+
+    public void setAward(String award) {
+        this.award = award;
+    }
+
+    public Person getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(Person character) {
+        this.character = character;
+    }
+
+    public Object getCitation() {
+        return citation;
+    }
+
+    public void setCitation(Object citation) {
+        if (citation instanceof CreativeWork) {
+            this.citation = citation;
+        } else {
+            this.citation = citation.toString();
+        }
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Place getContentLocation() {
+        return contentLocation;
+    }
+
+    public void setContentLocation(Place contentLocation) {
+        this.contentLocation = contentLocation;
+    }
+
+    public String getContentRating() {
+        return contentRating;
+    }
+
+    public void setContentRating(String contentRating) {
+        this.contentRating = contentRating;
+    }
+
+    public Thing getContributor() {
+        return contributor;
+    }
+
+    public void setContributor(Thing contributor) {
+        if (contributor instanceof Organization
+                || contributor instanceof Person) {
+            this.contributor = contributor;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public Thing getCopyrightHolder() {
+        return copyrightHolder;
+    }
+
+    public void setCopyrightHolder(Thing copyrightHolder) {
+        if (copyrightHolder instanceof Organization
+                || copyrightHolder instanceof Person) {
+            this.copyrightHolder = copyrightHolder;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public Number getCopyrightYear() {
+        return copyrightYear;
+    }
+
+    public void setCopyrightYear(Number copyrightYear) {
+        this.copyrightYear = copyrightYear;
+    }
+
+    public Thing getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Thing creator) {
+        if (creator instanceof Organization || creator instanceof Person) {
+            this.creator = creator;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public Date getDatePublished() {
+        return datePublished;
+    }
+
+    public void setDatePublished(Date datePublished) {
+        this.datePublished = datePublished;
+    }
+
+    public String getDiscussionUrl() {
+        return discussionUrl;
+    }
+
+    public void setDiscussionUrl(String discussionUrl) {
+        this.discussionUrl = discussionUrl;
+    }
+
+    public Person getEditor() {
+        return editor;
+    }
+
+    public void setEditor(Person editor) {
+        this.editor = editor;
+    }
+
+    public AlignmentObject getEducationalAlignment() {
+        return educationalAlignment;
+    }
+
+    public void setEducationalAlignment(AlignmentObject educationalAlignment) {
+        this.educationalAlignment = educationalAlignment;
+    }
+
+    public String getEducationalUse() {
+        return educationalUse;
+    }
+
+    public void setEducationalUse(String educationalUse) {
+        this.educationalUse = educationalUse;
+    }
+
+    public MediaObject getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(MediaObject encoding) {
+        this.encoding = encoding;
+    }
+
+    public CreativeWork getExampleOfWork() {
+        return exampleOfWork;
+    }
+
+    public void setExampleOfWork(CreativeWork exampleOfWork) {
+        this.exampleOfWork = exampleOfWork;
+    }
+
+    public String getFileFormat() {
+        return fileFormat;
+    }
+
+    public void setFileFormat(String fileFormat) {
+        this.fileFormat = fileFormat;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public CreativeWork getHasPart() {
+        return hasPart;
+    }
+
+    public void setHasPart(CreativeWork hasPart) {
+        this.hasPart = hasPart;
+    }
+
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
+    public Object getInLanguage() {
+        return inLanguage;
+    }
+
+    public void setInLanguage(Object inLanguage) {
+        if (inLanguage instanceof Language) {
+            this.inLanguage = inLanguage;
+        } else {
+            this.inLanguage = inLanguage.toString();
+        }
+    }
+
+    public InteractionCounter getInteractionStatistic() {
+        return interactionStatistic;
+    }
+
+    public void setInteractionStatistic(
+            InteractionCounter interactionStatistic) {
+        this.interactionStatistic = interactionStatistic;
+    }
+
+    public String getInteractivityType() {
+        return interactivityType;
+    }
+
+    public void setInteractivityType(String interactivityType) {
+        this.interactivityType = interactivityType;
+    }
+
+    public String getIsBasedOnUrl() {
+        return isBasedOnUrl;
+    }
+
+    public void setIsBasedOnUrl(String isBasedOnUrl) {
+        this.isBasedOnUrl = isBasedOnUrl;
+    }
+
+    public Boolean getIsFamilyFriendly() {
+        return isFamilyFriendly;
+    }
+
+    public void setIsFamilyFriendly(Boolean isFamilyFriendly) {
+        this.isFamilyFriendly = isFamilyFriendly;
+    }
+
+    public CreativeWork getIsPartOf() {
+        return isPartOf;
+    }
+
+    public void setIsPartOf(CreativeWork isPartOf) {
+        this.isPartOf = isPartOf;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getLearningResourceType() {
+        return learningResourceType;
+    }
+
+    public void setLearningResourceType(String learningResourceType) {
+        this.learningResourceType = learningResourceType;
+    }
+
+    public Object getLicense() {
+        return license;
+    }
+
+    public void setLicense(Object license) {
+        if (license instanceof CreativeWork) {
+            this.license = license;
+        } else {
+            this.license = license.toString();
+        }
+    }
+
+    public Place getLocationCreated() {
+        return locationCreated;
+    }
+
+    public void setLocationCreated(Place locationCreated) {
+        this.locationCreated = locationCreated;
+    }
+
+    public Thing getMainEntity() {
+        return mainEntity;
+    }
+
+    public void setMainEntity(Thing mainEntity) {
+        this.mainEntity = mainEntity;
+    }
+
+    public Thing getMentions() {
+        return mentions;
+    }
+
+    public void setMentions(Thing mentions) {
+        this.mentions = mentions;
+    }
+
+    public Offer getOffers() {
+        return offers;
+    }
+
+    public void setOffers(Offer offers) {
+        this.offers = offers;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public Thing getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Thing provider) {
+        if (provider instanceof Organization || provider instanceof Person) {
+            this.provider = provider;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public PublicationEvent getPublication() {
+        return publication;
+    }
+
+    public void setPublication(PublicationEvent publication) {
+        this.publication = publication;
+    }
+
+    public Thing getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Thing publisher) {
+        if (publisher instanceof Organization || publisher instanceof Person) {
+            this.publisher = publisher;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public String getPublishingPrinciples() {
+        return publishingPrinciples;
+    }
+
+    public void setPublishingPrinciples(String publishingPrinciples) {
+        this.publishingPrinciples = publishingPrinciples;
+    }
+
+    public Event getRecordedAt() {
+        return recordedAt;
+    }
+
+    public void setRecordedAt(Event recordedAt) {
+        this.recordedAt = recordedAt;
+    }
+
+    public PublicationEvent getReleasedEvent() {
+        return releasedEvent;
+    }
+
+    public void setReleasedEvent(PublicationEvent releasedEvent) {
+        this.releasedEvent = releasedEvent;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
+    }
+
+    public Organization getSourceOrganization() {
+        return sourceOrganization;
+    }
+
+    public void setSourceOrganization(Organization sourceOrganization) {
+        this.sourceOrganization = sourceOrganization;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public Duration getTimeRequired() {
+        return timeRequired;
+    }
+
+    public void setTimeRequired(Duration timeRequired) {
+        this.timeRequired = timeRequired;
+    }
+
+    public Thing getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(Thing translator) {
+        if (translator instanceof Organization
+                || translator instanceof Person) {
+            this.translator = translator;
+        } else {
+            throw new IllegalArgumentException(
+                    new String[] { "Organization", "Person" });
+        }
+    }
+
+    public String getTypicalAgeRange() {
+        return typicalAgeRange;
+    }
+
+    public void setTypicalAgeRange(String typicalAgeRange) {
+        this.typicalAgeRange = typicalAgeRange;
+    }
+
+    public Number getVersion() {
+        return version;
+    }
+
+    public void setVersion(Number version) {
+        this.version = version;
+    }
+
+    public VideoObject getVideo() {
+        return video;
+    }
+
+    public void setVideo(VideoObject video) {
+        this.video = video;
+    }
+
+    public CreativeWork getWorkExample() {
+        return workExample;
+    }
+
+    public void setWorkExample(CreativeWork workExample) {
+        this.workExample = workExample;
+    }
 }

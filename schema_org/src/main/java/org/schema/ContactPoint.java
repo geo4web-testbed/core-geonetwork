@@ -15,13 +15,10 @@ package org.schema;
 public class ContactPoint extends StructuredValue {
 
     /**
-     * FIXME The geographic area where a service or offered item is provided.
+     * The geographic area where a service or offered item is provided.
      * Supersedes serviceArea.
      */
-    private AdministrativeArea areaServed;
-    private String areaServed2;
-    private Place areaServed3;
-    private GeoShape areaServed4;
+    private Object areaServed;
 
     /**
      * A language someone may use with the item.
@@ -57,25 +54,31 @@ public class ContactPoint extends StructuredValue {
     private OpeningHoursSpecification hoursAvailable;
 
     /**
-     * FIXME The product or service this support contact point is related to
-     * (such as product support for a particular product line). This can be a
-     * specific product or product line (e.g. "iPhone") or a general category of
-     * products or services (e.g. "smartphones").
+     * The product or service this support contact point is related to (such as
+     * product support for a particular product line). This can be a specific
+     * product or product line (e.g. "iPhone") or a general category of products
+     * or services (e.g. "smartphones").
      */
-    private Product productSupported;
-    private String productSupported2;
+    private Object productSupported;
 
     /**
      * The telephone number.
      */
     private String telephone;
 
-    public AdministrativeArea getAreaServed() {
+    public Object getAreaServed() {
         return areaServed;
     }
 
-    public void setAreaServed(AdministrativeArea areaServed) {
-        this.areaServed = areaServed;
+    public void setAreaServed(Object areaServed) {
+
+        if ((areaServed instanceof AdministrativeArea)
+                || (areaServed instanceof Place)
+                || (areaServed instanceof GeoShape)) {
+            this.areaServed = areaServed;
+        } else {
+            this.areaServed = areaServed.toString();
+        }
     }
 
     public Language getAvailableLanguage() {
@@ -126,12 +129,16 @@ public class ContactPoint extends StructuredValue {
         this.hoursAvailable = hoursAvailable;
     }
 
-    public Product getProductSupported() {
+    public Object getProductSupported() {
         return productSupported;
     }
 
     public void setProductSupported(Object productSupported) {
-        this.productSupported = productSupported;
+        if (productSupported instanceof Product) {
+            this.productSupported = productSupported;
+        } else {
+            this.productSupported = productSupported.toString();
+        }
     }
 
     public String getTelephone() {

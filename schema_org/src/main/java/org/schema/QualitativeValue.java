@@ -6,13 +6,14 @@ package org.schema;
 
 /**
  * 
+ * TODO
  * 
- * https://schema.org/DataDownload
+ * https://schema.org/QualitativeValue
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class DataDownload extends MediaObject {
+public class QualitativeValue extends Enumeration {
 
 }

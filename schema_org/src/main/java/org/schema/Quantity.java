@@ -6,13 +6,12 @@ package org.schema;
 
 /**
  * 
- * 
- * https://schema.org/DataDownload
+ * https://schema.org/Action
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class DataDownload extends MediaObject {
-
+public class Quantity extends Intangible {
+    //Empty on purpose
 }

@@ -3,16 +3,17 @@
  */
 package org.schema;
 
+
 /**
  * 
  * TODO
  * 
- * https://schema.org/PropertyValue
+ * https://schema.org/EducationalOrganization
  * 
  * @author María Arias de Reyna (@delawen)
  * 
  * 
  */
-public class PropertyValue extends StructuredValue {
+public class EducationalOrganization extends Organization {
 
 }
