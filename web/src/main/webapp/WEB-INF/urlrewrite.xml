@@ -121,6 +121,29 @@
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
 
+	<rule> 
+        <condition name="Accept">application/rdf\+xml</condition> 
+        <from>^/doc/dataset/(.*)/(.*)</from> 
+        <to type="forward">/srv/dut/rdf.metadata.get?uuid=$1</to> 
+    </rule> 
+
+    <rule> 
+        <condition name="Accept">application/json</condition> 
+        <from>^/doc/dataset/(.*)/(.*)</from> 
+        <to type="forward">/srv/dut/xml.metadata.get?_content_type=json&amp;uuid=$1</to> 
+    </rule> 
+
+    <rule>
+		<condition name="Accept">application/xml</condition> 
+        <from>^/doc/dataset/(.*)$</from>
+        <to type="forward">/srv/dut/xml.metadata.get?uuid=$1</to>
+    </rule>
+
+	<rule>
+        <from>^/doc/dataset/(.*)$</from>
+        <to type="forward">/srv/dut/md.format.xml?xsl=full_view&amp;uuid=$1</to>
+    </rule>
+	 
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -261,6 +284,29 @@
         <from>^/opensearch/(.*)/download?(.*)$</from>
         <to type="forward">/srv/$1/atom.download</to>
     </rule>
+
+  <!-- Rules for direct links (for RDF at least) -->
+    <rule>
+        <note>
+            Retrieves xml format for a metadata. No language
+            Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+        </note>
+        <from>^/(metadata|resource)/(.*)$</from>
+        <to type="forward">/srv/eng/xml.metadata.get?uuid=$1</to>
+    </rule>
+
+    <rule>
+        <note>
+            Retrieves xml format for a thesaurus
+            Example URL: http://localhost:8080/geonetwork/thesaurus/external.theme.inspire-service-taxonomy
+        </note>
+        <from>^/thesaurus/(.*)$</from>
+        <to type="forward">/srv/eng/thesaurus.download?ref=$1</to>
+    </rule>
+
+    <!-- /Rules for direct links (for RDF at least) -->
+
+ 
 
     <!-- Sitemap URLs -->
     <rule>

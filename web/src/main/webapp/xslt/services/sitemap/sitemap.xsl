@@ -99,14 +99,24 @@
               </xsl:when>
               
               <xsl:otherwise>
-                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of select="$uuid"/>
+			  
+			  
+				<xsl:value-of select="$env/system/server/protocol"/>
+					<xsl:text>://</xsl:text>
+					<xsl:value-of select="$env/system/server/host"/>
+					<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+						<xsl:text>:</xsl:text>
+						<xsl:value-of select="$env/system/server/port"/>
+					</xsl:if>
+					<xsl:value-of select="/root/gui/url"/>
+					<xsl:text>/doc/dataset/</xsl:text>
+					<xsl:value-of select="uuid"/>
+        
+
               </xsl:otherwise>
             </xsl:choose>
           </loc>
-          <lastmod><xsl:value-of select="$changedate"/></lastmod>
-          <geo:geo>
-            <geo:format><xsl:value-of select="$schemaid"/></geo:format>
-          </geo:geo>
+            <lastmod><xsl:value-of select="tokenize(datainfo/changedate,'T')[1]" /></lastmod>
         </url>
       </xsl:for-each>
     </urlset>
