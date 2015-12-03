@@ -134,14 +134,20 @@
     </rule> 
 
     <rule>
-		<condition name="Accept">application/xml</condition> 
+		<condition name="Accept">text/html</condition> 
         <from>^/doc/dataset/(.*)$</from>
-        <to type="forward">/srv/dut/xml.metadata.get?uuid=$1</to>
+        <to type="forward">/srv/dut/md.format.xml?xsl=full_view&amp;uuid=$1</to>
     </rule>
 
 	<rule>
+		<condition name="Accept">application/xhtml+xml</condition> 
         <from>^/doc/dataset/(.*)$</from>
         <to type="forward">/srv/dut/md.format.xml?xsl=full_view&amp;uuid=$1</to>
+    </rule>
+	
+	<rule>
+        <from>^/doc/dataset/(.*)$</from>
+        <to type="forward">/srv/dut/xml.metadata.get?uuid=$1</to>
     </rule>
 	 
     <!-- Rules for RESTful urls for metadata retrieve -->

@@ -86,8 +86,7 @@
         <xsl:variable name="changedate" select="datainfo/changedate"/>
         
         <url>
-          <loc>
-            <xsl:choose>
+			<loc><xsl:choose>
               <xsl:when test="$format='xml'">
                 <xsl:variable name="metadataUrlValue">
                   <xsl:call-template name="metadataXmlDocUrl">
@@ -97,11 +96,8 @@
                 </xsl:variable>
                 <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
               </xsl:when>
-              
               <xsl:otherwise>
-			  
-			  
-				<xsl:value-of select="$env/system/server/protocol"/>
+					<xsl:value-of select="$env/system/server/protocol"/>
 					<xsl:text>://</xsl:text>
 					<xsl:value-of select="$env/system/server/host"/>
 					<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
@@ -111,14 +107,10 @@
 					<xsl:value-of select="/root/gui/url"/>
 					<xsl:text>/doc/dataset/</xsl:text>
 					<xsl:value-of select="uuid"/>
-        
-
               </xsl:otherwise>
-            </xsl:choose>
-          </loc>
-            <lastmod><xsl:value-of select="tokenize(datainfo/changedate,'T')[1]" /></lastmod>
-        </url>
-      </xsl:for-each>
+            </xsl:choose></loc>
+			<lastmod><xsl:value-of select="tokenize(datainfo/changedate,'Z')[1]" />Z</lastmod>
+        </url></xsl:for-each>
     </urlset>
   </xsl:template>
     
