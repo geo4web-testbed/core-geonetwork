@@ -13,14 +13,20 @@
   <!-- Those templates should be overriden in the schema plugin - start -->
   <xsl:template mode="getMetadataTitle" match="undefined"/>
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
+  <xsl:template mode="fmtheader" match="undefined"/>
+  <xsl:template mode="fmtfooter" match="undefined"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
   <xsl:template match="/">
-    <div class="container gn-metadata-view">
-      <article id="gn-metadata-view-{$metadataId}">
+	<html>
+	<head><title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title></head>
+	<body>
+    <xsl:apply-templates mode="fmtheader" select="$metadata"/>
+	<div class="container gn-metadata-view">
+      <article id="gn-metadata-view-{$metadataId}" itemscope="itemscope" itemtype="http://schema.org/Dataset">
         <header>
-          <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
+          <h1 itemprop="name"><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
           <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
           <!-- TODO : Add thumbnail to header -->
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
@@ -37,6 +43,9 @@
         </footer>
       </article>
     </div>
+	<xsl:apply-templates mode="fmtfooter" select="$metadata"/>
+	</body>
+	</html>
   </xsl:template>
 
 

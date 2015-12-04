@@ -136,13 +136,13 @@
     <rule>
 		<condition name="Accept">text/html</condition> 
         <from>^/doc/dataset/(.*)$</from>
-        <to type="forward">/srv/dut/md.format.xml?xsl=schema_org&amp;uuid=$1</to>
+        <to type="forward">/srv/dut/md.format.xml?xsl=schema-org&amp;uuid=$1</to>
     </rule>
 
 	<rule>
 		<condition name="Accept">application/xhtml+xml</condition> 
         <from>^/doc/dataset/(.*)$</from>
-        <to type="forward">/srv/dut/md.format.xml?xsl=schema_org&amp;uuid=$1</to>
+        <to type="forward">/srv/dut/md.format.xml?xsl=schema-org&amp;uuid=$1</to>
     </rule>
 	
 	<rule>
