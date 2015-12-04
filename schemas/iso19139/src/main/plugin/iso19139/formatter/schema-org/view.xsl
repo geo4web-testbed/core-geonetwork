@@ -131,15 +131,16 @@
   <!-- Bbox is displayed with an overview and the geom displayed on it
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
-                match="gmd:EX_GeographicBoundingBox[
-          gmd:westBoundLongitude/gco:Decimal != '']">
-		  <span itemprop="contentLocation"  itemscope="itemscope" itemtype="http://schema.org/Place">
-		  <span itemprop="geo" itemscope="itemscope" itemtype="http://schema.org/geoCoordinates">
-    <xsl:copy-of select="gn-fn-render:bbox(
-                            xs:double(gmd:westBoundLongitude/gco:Decimal),
-                            xs:double(gmd:southBoundLatitude/gco:Decimal),
-                            xs:double(gmd:eastBoundLongitude/gco:Decimal),
-                            xs:double(gmd:northBoundLatitude/gco:Decimal))"/></span></span>
+                match="gmd:EX_GeographicBoundingBox[gmd:westBoundLongitude/gco:Decimal != '']">
+		  <span itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
+		  <span itemprop="geo" itemscope="itemscope" itemtype="http://schema.org/geoShape">
+		  
+		  S: <i><xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/></i> 
+		  E: <i><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/></i> 
+		  N: <i><xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/></i> 
+		  W: <i><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/></i>
+		  <meta itemprop="box" content="{gmd:southBoundLatitude/gco:Decimal} {gmd:eastBoundLongitude/gco:Decimal} {gmd:northBoundLatitude/gco:Decimal} {gmd:westBoundLongitude/gco:Decimal}" />
+    </span></span>
   </xsl:template>
 
 
@@ -189,8 +190,8 @@
           <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Organization">
             <strong>
               <xsl:choose>
-                <xsl:when test="$email">
-                  <a href="mailto:{normalize-space($email)}"><xsl:value-of select="$displayName"/></a>
+                <xsl:when test="$email!=''">
+                  <a href="mailto:{normalize-space($email)}" itemprop="email"><xsl:value-of select="$displayName"/></a>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="$displayName"/>
@@ -198,44 +199,64 @@
               </xsl:choose>
             </strong><br/>
             <xsl:for-each select="*/gmd:contactInfo/*">
-              <xsl:for-each select="gmd:address/*/(
-                                          gmd:deliveryPoint|gmd:city|
-                                          gmd:administrativeArea|gmd:postalCode|gmd:country)">
-                <xsl:apply-templates mode="render-value" select="."/><br/>
+				<span itemprop="address"  itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
+              <xsl:for-each select="gmd:address/*/(gmd:deliveryPoint)">
+				<span itemprop="streetAddress">
+                <xsl:apply-templates mode="render-value" select="."/></span><br/>
               </xsl:for-each>
-            </xsl:for-each>
-          </address>
-        </div>
-        <div class="col-md-6">
-          <address itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
-            <xsl:for-each select="*/gmd:contactInfo/*">
-              <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
+			  <xsl:for-each select="gmd:address/*/(gmd:city)">
+                <span itemprop="addressLocality">
+                <xsl:apply-templates mode="render-value" select="."/></span><br/>
+              </xsl:for-each>
+			  <xsl:for-each select="gmd:address/*/(gmd:administrativeArea)">
+                <span itemprop="addressRegion">
+                <xsl:apply-templates mode="render-value" select="."/></span><br/>
+              </xsl:for-each>
+			  <xsl:for-each select="gmd:address/*/(gmd:postalCode)">
+                <span itemprop="postalCode">
+                <xsl:apply-templates mode="render-value" select="."/></span><br/>
+              </xsl:for-each>
+			  <xsl:for-each select="gmd:address/*/(gmd:country)">
+                <span itemprop="addressCountry">
+                <xsl:apply-templates mode="render-value" select="."/></span><br/>
+              </xsl:for-each>
+			  </span>
+            
+			  <span itemprop="contactPoint" itemscope="itemscope" itemtype="http://schema.org/ContactPoint">
+			  
+			  <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
                 <xsl:variable name="phoneNumber">
-					<span itemprop="telephone">
-                  <xsl:apply-templates mode="render-value" select="."/></span>
+                  <xsl:apply-templates mode="render-value" select="."/>
                 </xsl:variable>
                 <i class="fa fa-phone"></i>
-                <a href="tel:{$phoneNumber}">
+                <a href="tel:{$phoneNumber}" itemprop="telephone">
                   <xsl:value-of select="$phoneNumber"/>
                 </a>
               </xsl:for-each>
               <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
                 <xsl:variable name="phoneNumber">
-				<span itemprop="telephone">
-                  <xsl:apply-templates mode="render-value" select="."/></span>
+                  <xsl:apply-templates mode="render-value" select="."/>
                 </xsl:variable>
                 <i class="fa fa-fax"></i>
-                <a href="tel:{normalize-space($phoneNumber)}">
+                <a href="tel:{normalize-space($phoneNumber)}" itemprop="faxNumber">
                   <xsl:value-of select="normalize-space($phoneNumber)"/>
                 </a>
               </xsl:for-each>
-
+			  
+			  <span itemprop="description">
               <xsl:apply-templates mode="render-field"
-                                   select="gmd:hoursOfService|gmd:contactInstructions"/>
-				   
-              <xsl:apply-templates mode="render-field"
-                                   select="gmd:onlineResource"/>
-
+                                   select="gmd:contactInstructions"/></span>
+								   
+			  <span itemprop="hoursAvailable" itemscope="itemscope" itemtype="http://schema.org/OpeningHoursSpecification">	
+			  <span itemprop="description">
+			  <xsl:apply-templates mode="render-field"
+                                   select="gmd:hoursOfService"/></span></span>						   
+			  </span>
+			  
+			  <xsl:if test="gmd:onlineResource/gmd:linkage/gmd:URL!=''">
+				   <a itemprop="url" href="{gmd:onlineResource/gmd:linkage/gmd:URL}">{gmd:onlineResource/gmd:linkage/gmd:URL}</a>
+			  </xsl:if>
+			
             </xsl:for-each>
           </address>
         </div>
@@ -255,9 +276,9 @@
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
 
-        <a class="btn btn-link" href="xml.metadata.get?id={$metadataId}">
+        <a class="btn btn-link" href="xml.metadata.get?id={$metadataId}" itemprop="isBasedOnUrl" >
           <i class="fa fa-file-code-o fa-2x"></i>
-          <span data-translate="">metadataInXML</span>
+          <span>Metadata In XML</span>
         </a>
       </dd>
     </dl>

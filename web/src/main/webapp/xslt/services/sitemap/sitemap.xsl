@@ -109,7 +109,15 @@
 					<xsl:value-of select="uuid"/>
               </xsl:otherwise>
             </xsl:choose></loc>
-			<lastmod><xsl:value-of select="tokenize(datainfo/changedate,'Z')[1]" />Z</lastmod>
+			<xsl:choose>
+			<xsl:when test="datainfo/changedate=''"></xsl:when>
+			<xsl:when test="contains(datainfo/changedate,'T')">
+				<lastmod><xsl:value-of select="tokenize(datainfo/changedate,'Z')[1]" />Z</lastmod>
+			</xsl:when>
+			<xsl:otherwise>
+				<lastmod><xsl:value-of select="datainfo/changedate" /></lastmod>
+			</xsl:otherwise>
+			</xsl:choose>
         </url></xsl:for-each>
     </urlset>
   </xsl:template>
