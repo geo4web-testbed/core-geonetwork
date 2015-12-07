@@ -674,7 +674,7 @@
     <xsl:template mode="fmtheader"
                 match="*">
 	
-	<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
+	<link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
 	<style>
 	.toggler,.view-outline,.summary-links-associated-link { display:none }
 	.coord { float:left;width:25%; padding:2px; padding: 3px; }
@@ -707,9 +707,18 @@
 	
   </xsl:template>
 				
-  <xsl:template mode="fmtfooter" match="*">	
+<xsl:template mode="fmtfooter" match="*">	
   
-  </xsl:template>		
+<script>
+  (function(i,s,o,g,r,a,m) { i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+  (i[r].q=i[r].q||[]).push(arguments) } ,i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  } )(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71094958-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  
+</xsl:template>		
 				
 				
 </xsl:stylesheet>
