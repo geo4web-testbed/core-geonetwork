@@ -49,13 +49,24 @@
     <xsl:if test="not($pStart > $pEnd)">
       <xsl:choose>
         <xsl:when test="$pStart = $pEnd">
-          <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <xsl:variable name="formatParam">
               <xsl:if test="string($format)"><xsl:value-of select="$format" />/</xsl:if>
             </xsl:variable>
-            <loc><xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of select="$formatParam" /><xsl:value-of select="$pStart" />/<xsl:value-of select="/root/gui/language" /></loc>
+            <sitemap><loc><xsl:value-of select="$env/system/server/protocol"/>
+					<xsl:text>://</xsl:text>
+					<xsl:value-of select="$env/system/server/host"/>
+					<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+						<xsl:text>:</xsl:text>
+						<xsl:value-of select="$env/system/server/port"/>
+					</xsl:if><xsl:value-of select="/root/gui/url"/>
+			<xsl:text>/sitemap/</xsl:text>
+			<xsl:value-of select="$formatParam" /><xsl:value-of select="$pStart" />
+			<xsl:text>/</xsl:text>
+			<xsl:value-of select="/root/gui/language" /></loc>
             <lastmod><xsl:value-of select="$changeDate" /></lastmod>
           </sitemap>
+		  </sitemapindex>
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="vMid" select=
@@ -94,7 +105,15 @@
                     <xsl:with-param name="uuid" select="$uuid"/>
                   </xsl:call-template>
                 </xsl:variable>
-                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
+                <xsl:value-of select="$env/system/server/protocol"/>
+					<xsl:text>://</xsl:text>
+					<xsl:value-of select="$env/system/server/host"/>
+					<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+						<xsl:text>:</xsl:text>
+						<xsl:value-of select="$env/system/server/port"/>
+					</xsl:if>
+				<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/locService"/>
+				<xsl:text>/</xsl:text><xsl:value-of select="$metadataUrlValue"/>
               </xsl:when>
               <xsl:otherwise>
 					<xsl:value-of select="$env/system/server/protocol"/>
@@ -128,7 +147,14 @@
       <sc:dataset>
         <sc:datasetLabel><xsl:value-of select="$env/system/site/name"/> content catalogue for Linked Data spiders (RDF)</sc:datasetLabel>
         <xsl:for-each select="metadata/record">
-          <sc:dataDumpLocation><xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/srv/eng/rdf.metadata.get?uuid=<xsl:value-of select="uuid"/></sc:dataDumpLocation>
+          <sc:dataDumpLocation><xsl:value-of select="$env/system/server/protocol"/>
+					<xsl:text>://</xsl:text>
+					<xsl:value-of select="$env/system/server/host"/>
+					<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+						<xsl:text>:</xsl:text>
+						<xsl:value-of select="$env/system/server/port"/>
+					</xsl:if><xsl:value-of select="/root/gui/url"/>
+					<xsl:text>/srv/eng/rdf.metadata.get?uuid=</xsl:text><xsl:value-of select="uuid"/></sc:dataDumpLocation>
         </xsl:for-each>
         <!--For 5 latests update:
         <sc:sampleURI>http://<server_host>:<server_port>/<catalogue>/metadata/<uuid>.rdf</sc:sampleURI>
