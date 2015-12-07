@@ -49,7 +49,6 @@
     <xsl:if test="not($pStart > $pEnd)">
       <xsl:choose>
         <xsl:when test="$pStart = $pEnd">
-          <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <xsl:variable name="formatParam">
               <xsl:if test="string($format)"><xsl:value-of select="$format" />/</xsl:if>
             </xsl:variable>
@@ -66,7 +65,6 @@
 			<xsl:value-of select="/root/gui/language" /></loc>
             <lastmod><xsl:value-of select="$changeDate" /></lastmod>
           </sitemap>
-		  </sitemapindex>
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="vMid" select=
