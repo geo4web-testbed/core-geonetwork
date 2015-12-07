@@ -134,11 +134,15 @@
                 match="gmd:EX_GeographicBoundingBox[gmd:westBoundLongitude/gco:Decimal != '']">
 		  <span itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
 		  <span itemprop="geo" itemscope="itemscope" itemtype="http://schema.org/geoShape">
-		  
+		  <dl><dt>Locatie</dt><dd>
+		  <div class="thumbnail">
 		  S: <i><xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/></i> 
 		  E: <i><xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/></i> 
 		  N: <i><xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/></i> 
 		  W: <i><xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/></i>
+		  </div>
+		  </dd>
+		  </dl>
 		  <meta itemprop="box" content="{gmd:southBoundLatitude/gco:Decimal} {gmd:eastBoundLongitude/gco:Decimal} {gmd:northBoundLatitude/gco:Decimal} {gmd:westBoundLongitude/gco:Decimal}" />
     </span></span>
   </xsl:template>
@@ -179,14 +183,14 @@
 	  </span>
     </xsl:variable>
 
-    <div class="gn-contact">
+    <div class="gn-contact col-md-4 col-sm-12" style="border:1px solid gray;float:right;border-radius:8px" >
       <h3>
         <i class="fa fa-envelope"></i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
       </h3>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-xs-12">
           <address itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Organization">
             <strong>
               <xsl:choose>
@@ -238,7 +242,7 @@
                   <xsl:apply-templates mode="render-value" select="."/>
                 </xsl:variable>
                 <i class="fa fa-fax"></i>
-                <a href="tel:{normalize-space($phoneNumber)}" itemprop="faxNumber">
+                <a href="fax:{normalize-space($phoneNumber)}" itemprop="faxNumber">
                   <xsl:value-of select="normalize-space($phoneNumber)"/>
                 </a>
               </xsl:for-each>
@@ -691,13 +695,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="catalog.search">Geo4web #4</a>
+          <a class="navbar-brand" href="../../srv/dut/catalog.search">Geo4web #4</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="catalog.search#/search">Zoeken</a></li>
-			<li><a href="catalog.search#/map">Kaart</a></li>
-            <li><a href="http://www.geonovum.nl/onderwerp-artikel/testbed-locatie-data-het-web">Over</a></li>
+            <li><a href="../../srv/dut/catalog.search#/search">Zoeken</a></li>
+			<li><a href="../../srv/dut/catalog.search#/map">Kaart</a></li>
+            <li><a href="http://www.geonovum.nl/onderwerp-artikel/testbed-locatie-data-het-web" target="_top">Over</a></li>
             
           </ul>
         </div>

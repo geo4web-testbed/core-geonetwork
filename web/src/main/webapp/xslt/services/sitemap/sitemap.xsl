@@ -29,18 +29,13 @@
   </xsl:template>
 
   <xsl:template name="indexDoc">
-    <sitemapindex
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
-
+    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <xsl:call-template name="displayIndexDocs">
         <xsl:with-param name="pStart" select="1"/>
         <xsl:with-param name="pEnd" select="$indexDocs"/>
       </xsl:call-template>
     </sitemapindex>
   </xsl:template>
-
 
   <xsl:template name="displayIndexDocs">
     <xsl:param name="pStart"/>
