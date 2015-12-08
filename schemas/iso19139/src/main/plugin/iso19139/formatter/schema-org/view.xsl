@@ -15,29 +15,25 @@
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
-  <!-- This formatter render an ISO19139 record based on the
-  editor configuration file.
 
+  <xsl:variable name="env" select="/root/gui/systemConfig"/>
 
-  The layout is made in 2 modes:
-  * render-field taking care of elements (eg. sections, label)
-  * render-value taking care of element values (eg. characterString, URL)
-
-  3 levels of priority are defined: 100, 50, none
-
-  -->
-
-
-
- 
-
-  
+    <xsl:variable name="baseurl">		
+	<xsl:value-of select="$env/system/server/protocol"/>
+		<xsl:text>://</xsl:text>
+		<xsl:value-of select="$env/system/server/host"/>
+		<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+			<xsl:text>:</xsl:text>
+			<xsl:value-of select="$env/system/server/port"/>
+		</xsl:if><xsl:value-of select="/root/gui/url"/>
+  </xsl:variable>
   
   <!-- Load the editor configuration to be able
   to render the different views -->
   <xsl:variable name="configuration"
                 select="document('../../layout/config-editor.xml')"/>
 
+			
   <!-- Some utility -->
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
@@ -66,10 +62,6 @@
     <xsl:value-of select="$value/gco:CharacterString"/>
   </xsl:template>
 
-
-
-
-
   <!-- Most of the elements are ... -->
   <xsl:template mode="render-field"
                 match="*[gco:CharacterString|gco:Integer|gco:Decimal|
@@ -93,8 +85,6 @@
       </dd>
     </dl>
   </xsl:template>
-
-
 
   <!-- Some elements are only containers so bypass them -->
   <xsl:template mode="render-field"
@@ -277,10 +267,14 @@
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
-        <xsl:apply-templates mode="render-value" select="*"/>
-        <xsl:apply-templates mode="render-value" select="@*"/>
+ 
+    <xsl:variable name="mdid"><xsl:apply-templates mode="render-value" select="*"/></xsl:variable>
+	<xsl:value-of select="$mdid"/>
+	  <meta itemprop="url" content="{$baseurl}/doc/dataset/{$mdid}" />
+	  <meta content="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}" itemprop="isBasedOnUrl"/>
+	<xsl:apply-templates mode="render-value" select="@*"/>
 
-        <a class="btn btn-link" href="xml.metadata.get?id={$metadataId}" itemprop="isBasedOnUrl" >
+        <a class="btn btn-link" href="/srv/dut/xml.metadata.get?id={$metadataId}" >
           <i class="fa fa-file-code-o fa-2x"></i>
           <span>Metadata In XML</span>
         </a>
@@ -590,29 +584,10 @@
   </xsl:template>
 
   <!-- ... Dates - formatting is made on the client side by the directive  -->
-  <xsl:template mode="render-value"
-                match="gco:Date[matches(., '[0-9]{4}')]">
-    <span data-gn-humanize-time="{.}" data-format="YYYY"></span>
-  </xsl:template>
-
-  <xsl:template mode="render-value"
-                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="MMM YYYY"></span>
-  </xsl:template>
-
-  <xsl:template mode="render-value"
-                match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY"></span>
-  </xsl:template>
-
-  <xsl:template mode="render-value"
-                match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
-    <span data-gn-humanize-time="{.}"></span>
-  </xsl:template>
-
+  
   <xsl:template mode="render-value"
                 match="gco:Date|gco:DateTime">
-    <span data-gn-humanize-time="{.}"></span>
+    <i><xsl:value-of select="."/></i>
   </xsl:template>
 
   <xsl:template mode="render-value"
@@ -707,12 +682,10 @@
         </div>
       </div>
     </nav>
-   
-	
+ 
   </xsl:template>
 				
 <xsl:template mode="fmtfooter" match="*">	
-  
 <script>
   (function(i,s,o,g,r,a,m) { i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
   (i[r].q=i[r].q||[]).push(arguments) } ,i[r].l=1*new Date();a=s.createElement(o),
@@ -721,8 +694,6 @@
   ga('create', 'UA-71094958-1', 'auto');
   ga('send', 'pageview');
 </script>
-  
 </xsl:template>		
-				
-				
+							
 </xsl:stylesheet>

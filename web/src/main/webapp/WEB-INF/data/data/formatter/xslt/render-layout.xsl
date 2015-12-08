@@ -24,8 +24,8 @@
 	<body>
     <xsl:apply-templates mode="fmtheader" select="$metadata"/>
 	<div class="container gn-metadata-view">
-      <article id="gn-metadata-view-{$metadataId}" itemscope="itemscope" itemtype="http://schema.org/Dataset">
-        <header>
+      <article itemscope="itemscope" itemtype="http://schema.org/Dataset">
+	    <header>
           <h1 itemprop="name"><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
           <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
           <!-- TODO : Add thumbnail to header -->
