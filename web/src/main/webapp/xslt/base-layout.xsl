@@ -24,7 +24,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
-
+		<meta name="msvalidate.01" content="208168D0A98471AB4CDF4C3DD665933A" />
         <meta name="description" content=""/>
         <meta name="keywords" content=""/>
 
