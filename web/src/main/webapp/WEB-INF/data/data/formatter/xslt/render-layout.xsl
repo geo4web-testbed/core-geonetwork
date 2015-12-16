@@ -19,7 +19,6 @@
 
   <!-- Starting point -->
   <xsl:template match="/">
-	<head><title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title></head>
 	<body>
     <xsl:apply-templates mode="fmtheader" select="$metadata"/>
 	<div class="container gn-metadata-view">
@@ -44,6 +43,7 @@
     </div>
 	<xsl:apply-templates mode="fmtfooter" select="$metadata"/>
 	</body>
+
   </xsl:template>
 
 
