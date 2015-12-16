@@ -16,15 +16,15 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+
 
     <xsl:variable name="baseurl">		
-	<xsl:value-of select="$env/system/server/protocol"/>
+	<xsl:value-of select="/root/gui/systemConfig/system/server/protocol"/>
 		<xsl:text>://</xsl:text>
-		<xsl:value-of select="$env/system/server/host"/>
-		<xsl:if test="$env/system/server/port != '80' and $env/system/server/port != '443'">
+		<xsl:value-of select="/root/gui/systemConfig/system/server/host"/>
+		<xsl:if test="/root/gui/systemConfig/system/server/port != '80' and /root/gui/systemConfig/system/server/port != '443'">
 			<xsl:text>:</xsl:text>
-			<xsl:value-of select="$env/system/server/port"/>
+			<xsl:value-of select="/root/gui/systemConfig/system/server/port"/>
 		</xsl:if><xsl:value-of select="/root/gui/url"/>
   </xsl:variable>
   
@@ -216,41 +216,55 @@
               </xsl:for-each>
 			  </span>
             
-			  <span itemprop="contactPoint" itemscope="itemscope" itemtype="http://schema.org/ContactPoint">
-			  
+			  <xsl:variable name="phoneNumber">
 			  <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
-                <xsl:variable name="phoneNumber">
                   <xsl:apply-templates mode="render-value" select="."/>
-                </xsl:variable>
-                <i class="fa fa-phone"></i>
-                <a href="tel:{$phoneNumber}" itemprop="telephone">
-                  <xsl:value-of select="$phoneNumber"/>
-                </a>
               </xsl:for-each>
+			  </xsl:variable>
+			  <xsl:variable name="faxNumber">
               <xsl:for-each select="gmd:phone/*/gmd:facsimile[normalize-space(.) != '']">
-                <xsl:variable name="phoneNumber">
-                  <xsl:apply-templates mode="render-value" select="."/>
-                </xsl:variable>
-                <i class="fa fa-fax"></i>
-                <a href="fax:{normalize-space($phoneNumber)}" itemprop="faxNumber">
-                  <xsl:value-of select="normalize-space($phoneNumber)"/>
-                </a>
+                  <xsl:apply-templates mode="render-value" select="."/>  
               </xsl:for-each>
+			  </xsl:variable>
+			  <xsl:variable name="CPUrl">
+			  <xsl:for-each select="gmd:onlineResource/gmd:linkage/gmd:URL[normalize-space(.) != '']">
+			      <xsl:value-of select="."/>
+			  </xsl:for-each>
+			  </xsl:variable>
 			  
+			  <xsl:if test="$CPUrl!='' or $phoneNumber!=''">
+			  <span itemprop="contactPoint" itemscope="itemscope" itemtype="http://schema.org/ContactPoint">
+			  			  
 			  <span itemprop="description">
               <xsl:apply-templates mode="render-field"
-                                   select="gmd:contactInstructions"/></span>
-								   
+                                   select="gmd:contactInstructions"/></span>				
+								
 			  <span itemprop="hoursAvailable" itemscope="itemscope" itemtype="http://schema.org/OpeningHoursSpecification">	
-			  <span itemprop="description">
-			  <xsl:apply-templates mode="render-field"
-                                   select="gmd:hoursOfService"/></span></span>						   
+				  <span itemprop="description">
+					<xsl:apply-templates mode="render-field"
+									   select="gmd:hoursOfService"/>
+				  </span>
+			  </span>	
+				<meta itemprop="contactType" content="customer support"/>
+				<xsl:if test="$phoneNumber!=''">
+				<a href="tel:{$phoneNumber}" itemprop="telephone">
+                  <i class="fa fa-phone"></i> <xsl:value-of select="$phoneNumber"/><br/>
+                </a>
+				</xsl:if>
+                <xsl:if test="$faxNumber!=''">
+					<a href="fax:{$faxNumber}" itemprop="faxNumber">
+					  <i class="fa fa-fax"></i> <xsl:value-of select="$faxNumber"/><br/>
+					</a>
+				  </xsl:if>
+			  
+			  <xsl:if test="$CPUrl!=''">
+				   <a itemprop="url" href="{gmd:onlineResource/gmd:linkage/gmd:URL}">
+				   <i class="fa fa-link"></i> <xsl:value-of select="$CPUrl"/></a>
+			  </xsl:if>			     
+			  					   
 			  </span>
 			  
-			  <xsl:if test="gmd:onlineResource/gmd:linkage/gmd:URL!=''">
-				   <a itemprop="url" href="{gmd:onlineResource/gmd:linkage/gmd:URL}">{gmd:onlineResource/gmd:linkage/gmd:URL}</a>
-			  </xsl:if>
-			
+			</xsl:if>
             </xsl:for-each>
           </address>
         </div>

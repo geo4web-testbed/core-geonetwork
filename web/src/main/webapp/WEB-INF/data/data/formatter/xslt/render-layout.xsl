@@ -19,7 +19,6 @@
 
   <!-- Starting point -->
   <xsl:template match="/">
-	<html>
 	<head><title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title></head>
 	<body>
     <xsl:apply-templates mode="fmtheader" select="$metadata"/>
@@ -45,7 +44,6 @@
     </div>
 	<xsl:apply-templates mode="fmtfooter" select="$metadata"/>
 	</body>
-	</html>
   </xsl:template>
 
 
@@ -130,10 +128,12 @@
 
     <!-- Matching nodes -->
     <xsl:variable name="nodes">
+		<xsl:if test="$base">
       <saxon:call-template name="{concat('evaluate-', $schema)}">
         <xsl:with-param name="base" select="$base"/>
         <xsl:with-param name="in" select="concat('/../', .)"/>
       </saxon:call-template>
+	  </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="fieldName">

@@ -106,7 +106,10 @@ public class XsltFormatter implements FormatterImpl {
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
 
-        Element response = new Element("metadata");
+		String rootNode = "metadata";
+		if (fparams.formatType.toString()=="html") rootNode = "html";
+		
+        Element response = new Element(rootNode);
         response.addContent(transformed);
         return Xml.getString(response);
     }
