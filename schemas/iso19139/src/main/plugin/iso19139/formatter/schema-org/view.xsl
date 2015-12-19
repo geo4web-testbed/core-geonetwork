@@ -122,7 +122,7 @@
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
                 match="gmd:EX_GeographicBoundingBox[gmd:westBoundLongitude/gco:Decimal != '']">
-		  <span itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
+	<div class="col-md-8" itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
 		  <span itemprop="geo" itemscope="itemscope" itemtype="http://schema.org/geoShape">
 		  <dl><dt>Locatie</dt><dd>
 		  <div class="thumbnail">
@@ -134,7 +134,21 @@
 		  </dd>
 		  </dl>
 		  <meta itemprop="box" content="{gmd:southBoundLatitude/gco:Decimal} {gmd:eastBoundLongitude/gco:Decimal} {gmd:northBoundLatitude/gco:Decimal} {gmd:westBoundLongitude/gco:Decimal}" />
-    </span></span>
+    </span></div>
+		<script>
+			var x1=parseFloat('<xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>');
+			var x2=parseFloat('<xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>');
+			var y1=parseFloat('<xsl:value-of select="gmd:southBoundLatitude/gco:Decimal"/>');
+			var y2=parseFloat('<xsl:value-of select="gmd:northBoundLatitude/gco:Decimal"/>');
+		</script>
+		<link rel="stylesheet" href="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+		
+		<script src="//cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js">//
+		</script>
+		<script src="../../maps/script.js">//
+		</script>
+			
+	 
   </xsl:template>
 
 
@@ -310,7 +324,8 @@
                                select="*/gmd:description"/>
         </xsl:variable>
 
-        <a href="{*/gmd:linkage/gmd:URL}" itemprop="contentUrl">
+        <a href="{*/gmd:linkage/gmd:URL}" itemprop="contentUrl"> 
+		<i><xsl:value-of select="*/gmd:protocol"/></i>
 		<span itemprop="name"><b>
           <xsl:apply-templates mode="render-value"
                                select="*/gmd:name"/></b></span><br/>
@@ -320,6 +335,17 @@
         
       </dd>
     </dl>
+	<xsl:if test="contains(*/gmd:protocol,'WMS') and */gmd:name != ''">
+	<script>
+	// Add each wms layer using L.tileLayer.wms
+	var temperature = L.tileLayer.wms('<xsl:value-of select="normalize-space(*/gmd:linkage/gmd:URL)"/>', {
+    format: 'image/png',
+    transparent: true,
+    layers: '<xsl:value-of select="normalize-space(*/gmd:name)"/>'
+	}).addTo(map);
+	</script>
+	</xsl:if>
+	
   </xsl:template>
 
   <!-- Identifier -->
@@ -420,12 +446,12 @@
               <xsl:apply-templates mode="localised"
                                    select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
             </xsl:variable>
-            <li>
+            
               <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
-                   alt="{$label}"
+                   alt="{$label}" style="max-height:150px;"
 				   itemprop="thumbnailUrl"
                    class="img-thumbnail"/>
-            </li>
+           
           </xsl:for-each>
         </ul>
       </dd>
@@ -606,7 +632,7 @@
 
   <xsl:template mode="render-value"
                 match="gmd:language/gco:CharacterString">
-    <span data-translate=""><xsl:value-of select="."/></span>
+	<dl><dt>Taal</dt><dd data-translate="" itemprop="inLanguage"><xsl:value-of select="."/></dd></dl>		
   </xsl:template>
 
   <!-- ... Codelists -->
@@ -675,7 +701,7 @@
 	header { padding-top:50px; }
 	</style>
 	
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default" style="margin-bottom:0px;">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -696,7 +722,10 @@
         </div>
       </div>
     </nav>
- 
+	<div class="row"><div class="col-sm-12">
+	<div id="map" class="hidden-xs" style="width:100%;height:250px;background-color:#ddd;border:1px solid #999;">
+	<br/>
+	</div></div></div>
   </xsl:template>
 				
 <xsl:template mode="fmtfooter" match="*">	
