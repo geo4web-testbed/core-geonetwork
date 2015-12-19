@@ -31,5 +31,12 @@ var myStyle = {
     "opacity": 0.65
 };
 
-L.geoJson(geojsonFeature,{style: myStyle}).addTo(map);
 
+L.geoJson(geojsonFeature,{style: myStyle}).addTo(map).on('mouseover', function(e) {
+  var popup = L.popup()
+   .setLatLng(e.latlng) 
+   .setContent('Dataset locatie')
+   .openOn(map);
+});
+
+map.fitBounds([[y1,x1],[y2,x2]]);

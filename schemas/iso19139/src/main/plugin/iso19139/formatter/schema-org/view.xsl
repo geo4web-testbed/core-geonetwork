@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -16,17 +17,7 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-
-
-    <xsl:variable name="baseurl">		
-	<xsl:value-of select="/root/gui/systemConfig/system/server/protocol"/>
-		<xsl:text>://</xsl:text>
-		<xsl:value-of select="/root/gui/systemConfig/system/server/host"/>
-		<xsl:if test="/root/gui/systemConfig/system/server/port != '80' and /root/gui/systemConfig/system/server/port != '443'">
-			<xsl:text>:</xsl:text>
-			<xsl:value-of select="/root/gui/systemConfig/system/server/port"/>
-		</xsl:if><xsl:value-of select="/root/gui/url"/>
-  </xsl:variable>
+  <xsl:variable name="baseurl" select="'https://ngr3.geocat.net/geonetwork-geo4web'"/>	
   
   <!-- Load the editor configuration to be able
   to render the different views -->
@@ -246,36 +237,43 @@
 			  </xsl:for-each>
 			  </xsl:variable>
 			  
-			  <xsl:if test="$CPUrl!='' or $phoneNumber!=''">
+			  <xsl:if test="$CPUrl!=''">
+				   <a href="{gmd:onlineResource/gmd:linkage/gmd:URL}" target="_blank">
+				   <i class="fa fa-link"></i> <span itemprop="url"><xsl:value-of select="$CPUrl"/></span></a>
+			  </xsl:if>	
+			  
+			  
+			  <xsl:if test="$phoneNumber!=''">
 			  <span itemprop="contactPoint" itemscope="itemscope" itemtype="http://schema.org/ContactPoint">
-			  			  
+			  <meta itemprop="contactType" content="customer support"/>	
+			  
+			  <xsl:if test="normalize-space(gmd:contactInstructions)!=''">
 			  <span itemprop="description">
               <xsl:apply-templates mode="render-field"
                                    select="gmd:contactInstructions"/></span>				
-								
+				</xsl:if>
+				
+				<xsl:if test="normalize-space($phoneNumber)!=''">
+				<a href="tel:{normalize-space($phoneNumber)}">
+                  <i class="fa fa-phone"></i> <span  itemprop="telephone"><xsl:value-of select="$phoneNumber"/></span>
+                </a><br/>
+				</xsl:if>
+                <xsl:if test="normalize-space($faxNumber)!=''">
+					<a href="fax:{normalize-space($faxNumber)}">
+					  <i class="fa fa-fax"></i> <span itemprop="faxNumber"><xsl:value-of select="$faxNumber"/></span>
+					</a><br/>
+				  </xsl:if>				  
+			  
+			  
+			  
+			  <xsl:if test="normalize-space(gmd:hoursOfService)!=''">
 			  <span itemprop="hoursAvailable" itemscope="itemscope" itemtype="http://schema.org/OpeningHoursSpecification">	
 				  <span itemprop="description">
 					<xsl:apply-templates mode="render-field"
 									   select="gmd:hoursOfService"/>
 				  </span>
-			  </span>	
-				<meta itemprop="contactType" content="customer support"/>
-				<xsl:if test="$phoneNumber!=''">
-				<a href="tel:{$phoneNumber}" itemprop="telephone">
-                  <i class="fa fa-phone"></i> <xsl:value-of select="$phoneNumber"/><br/>
-                </a>
-				</xsl:if>
-                <xsl:if test="$faxNumber!=''">
-					<a href="fax:{$faxNumber}" itemprop="faxNumber">
-					  <i class="fa fa-fax"></i> <xsl:value-of select="$faxNumber"/><br/>
-					</a>
-				  </xsl:if>
+			  </span></xsl:if>	
 			  
-			  <xsl:if test="$CPUrl!=''">
-				   <a itemprop="url" href="{gmd:onlineResource/gmd:linkage/gmd:URL}">
-				   <i class="fa fa-link"></i> <xsl:value-of select="$CPUrl"/></a>
-			  </xsl:if>			     
-			  					   
 			  </span>
 			  
 			</xsl:if>
