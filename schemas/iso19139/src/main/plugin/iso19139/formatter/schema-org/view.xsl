@@ -17,7 +17,7 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:variable name="baseurl" select="'https://ngr3.geocat.net/geonetwork-geo4web'"/>	
+  <xsl:variable name="baseurl" select="'http://opendatacat.net/geonetwork-geo4web'"/>	
   
   <!-- Load the editor configuration to be able
   to render the different views -->
@@ -142,6 +142,15 @@
 	 
   </xsl:template>
 
+    <!-- A contact is displayed with its role as header -->
+  <xsl:template mode="render-field"
+                match="*/gmd:abstract"
+                priority="100">
+    <b>Samenvatting</b><br/>
+	<span itemprop="description">
+      <xsl:apply-templates mode="render-value" select="*/gmd:abstract"/>
+	</span>
+  </xsl:template>
 
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
@@ -231,14 +240,14 @@
                   <xsl:apply-templates mode="render-value" select="."/>  
               </xsl:for-each>
 			  </xsl:variable>
-			  <xsl:variable name="CPUrl">
-			  <xsl:for-each select="gmd:onlineResource/gmd:linkage/gmd:URL[normalize-space(.) != '']">
-			      <xsl:value-of select="."/>
-			  </xsl:for-each>
-			  </xsl:variable>
 			  
+			  <xsl:variable name="CPUrl">
+				  <xsl:for-each select="gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL[normalize-space(.) != '']">
+					  <xsl:value-of select="."/>
+				  </xsl:for-each>
+			  </xsl:variable>
 			  <xsl:if test="$CPUrl!=''">
-				   <a href="{gmd:onlineResource/gmd:linkage/gmd:URL}" target="_blank">
+				   <a href="{$CPUrl}" target="_blank">
 				   <i class="fa fa-link"></i> <span itemprop="url"><xsl:value-of select="$CPUrl"/></span></a>
 			  </xsl:if>	
 			  
@@ -300,7 +309,7 @@
 	  <meta content="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}" itemprop="isBasedOnUrl"/>
 	<xsl:apply-templates mode="render-value" select="@*"/>
 
-        <a class="btn btn-link" href="/srv/dut/xml.metadata.get?id={$metadataId}" >
+        <a class="btn btn-link" href="../../xml.metadata.get?id={$metadataId}" >
           <i class="fa fa-file-code-o fa-2x"></i>
           <span>Metadata In XML</span>
         </a>
@@ -336,7 +345,7 @@
 	<xsl:if test="contains(*/gmd:protocol,'WMS') and */gmd:name != ''">
 	<script>
 	// Add each wms layer using L.tileLayer.wms
-	var temperature = L.tileLayer.wms('<xsl:value-of select="normalize-space(*/gmd:linkage/gmd:URL)"/>', {
+	L.tileLayer.wms('<xsl:value-of select="normalize-space(*/gmd:linkage/gmd:URL)"/>', {
     format: 'image/png',
     transparent: true,
     layers: '<xsl:value-of select="normalize-space(*/gmd:name)"/>'
@@ -392,14 +401,11 @@
         </xsl:if>
       </dt>
       <dd>
-        <div>
-          <ul>
-            <li itemprop="keywords">
+        
+            <span itemprop="keywords">
               <xsl:apply-templates mode="render-value"
-                                   select="*/gmd:keyword/*"/>
-            </li>
-          </ul>
-        </div>
+                                   select="*/gmd:keyword/*"/></span>
+  
       </dd>
     </dl>
   </xsl:template>
@@ -417,14 +423,12 @@
         </xsl:if>
       </dt>
       <dd>
-        <div>
-          <ul>
-            <li itemprop="keywords">
+        
+            <span itemprop="keywords">
               <xsl:apply-templates mode="render-value"
                                    select="*/gmd:keyword/*"/>
-            </li>
-          </ul>
-        </div>
+            </span>
+          
       </dd>
     </dl>
   </xsl:template>
@@ -498,16 +502,17 @@
                 priority="100">
     <dl class="gn-date">
       <dt>
+
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
-        <xsl:if test="*/gmd:dateType/*[@codeListValue != '']">
-          (<xsl:apply-templates mode="render-value"
-                                select="*/gmd:dateType/*/@codeListValue"/>)
-        </xsl:if>
+		<xsl:if test="*/gmd:dateType/*/@codeListValue!=''">(<xsl:value-of select="*/gmd:dateType/*/@codeListValue"/>)</xsl:if>
       </dt>
       <dd>
-        <xsl:apply-templates mode="render-value"
-                             select="*/gmd:date/*"/>
-      </dd>
+	  <i>
+	  <span itemprop="{concat('date',*/gmd:dateType/*/@codeListValue)}">
+        <xsl:apply-templates mode="render-value" select="*/gmd:date/*"/>
+	  </span>
+      </i>
+	  </dd>
     </dl>
   </xsl:template>
 
@@ -574,12 +579,6 @@
     <xsl:apply-templates mode="render-field"/>
   </xsl:template>
 
-
-
-
-
-
-
   <!-- ########################## -->
   <!-- Render values for text ... -->
   <xsl:template mode="render-value"
@@ -625,12 +624,12 @@
   
   <xsl:template mode="render-value"
                 match="gco:Date|gco:DateTime">
-    <i><xsl:value-of select="."/></i>
+    <xsl:value-of select="."/>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gmd:language/gco:CharacterString">
-	<dl><dt>Taal</dt><dd data-translate="" itemprop="inLanguage"><xsl:value-of select="."/></dd></dl>		
+	<dl><dt>Taal</dt><dd itemprop="inLanguage"><xsl:value-of select="."/></dd></dl>		
   </xsl:template>
 
   <!-- ... Codelists -->
@@ -673,10 +672,10 @@
                       select="tr:codelist-value-desc(
                             tr:create($schema),
                             local-name(), $id)"/>
-        <span title="{$codelistDesc}"><xsl:value-of select="$codelistTranslation"/></span>
+        <span title="{$codelistDesc}" itemprop="keywords"><xsl:value-of select="$codelistTranslation"/></span>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$id"/>
+        <span itemprop="keywords"><xsl:value-of select="$id"/></span>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
