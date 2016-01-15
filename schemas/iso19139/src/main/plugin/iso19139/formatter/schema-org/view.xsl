@@ -113,7 +113,7 @@
   and the coordinates displayed around -->
   <xsl:template mode="render-field"
                 match="gmd:EX_GeographicBoundingBox[gmd:westBoundLongitude/gco:Decimal != '']">
-	<div class="col-md-8" itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
+	<div itemprop="spatial"  itemscope="itemscope" itemtype="http://schema.org/Place">
 		  <span itemprop="geo" itemscope="itemscope" itemtype="http://schema.org/geoShape">
 		  <dl><dt>Locatie</dt><dd>
 		  <div class="thumbnail">
@@ -125,7 +125,8 @@
 		  </dd>
 		  </dl>
 		  <meta itemprop="box" content="{gmd:southBoundLatitude/gco:Decimal} {gmd:eastBoundLongitude/gco:Decimal} {gmd:northBoundLatitude/gco:Decimal} {gmd:westBoundLongitude/gco:Decimal}" />
-    </span></div>
+    </span>
+	</div>
 		<script>
 			var x1=parseFloat('<xsl:value-of select="gmd:westBoundLongitude/gco:Decimal"/>');
 			var x2=parseFloat('<xsl:value-of select="gmd:eastBoundLongitude/gco:Decimal"/>');
@@ -138,20 +139,135 @@
 		</script>
 		<script src="../../maps/script.js">//
 		</script>
-			
-	 
+
   </xsl:template>
 
     <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
+                match="*/gmd:lineage"
+                priority="100">
+	<dl>
+    <dt>Beschrijving herkomst</dt>
+	<dd itemprop="about">
+      <xsl:value-of select="gco:CharacterString"/>
+	</dd>
+	</dl>
+  </xsl:template>
+  
+      <!-- A contact is displayed with its role as header -->
+  <xsl:template mode="render-field"
+                match="*/gmd:purpose"
+                priority="100">
+	<dl>
+    <dt>Beschrijving doel</dt>
+	<dd itemprop="about">
+      <xsl:value-of select="gco:CharacterString"/>
+	</dd>
+	</dl>
+  </xsl:template>
+  
+    <!-- A contact is displayed with its role as header -->
+  <xsl:template mode="render-field"
                 match="*/gmd:abstract"
                 priority="100">
-    <b>Samenvatting</b><br/>
-	<span itemprop="description">
-      <xsl:apply-templates mode="render-value" select="*/gmd:abstract"/>
-	</span>
+	<dl>
+    <dt>Samenvatting</dt>
+	<dd itemprop="description">
+      <xsl:value-of select="gco:CharacterString"/>
+	</dd>
+	</dl>
   </xsl:template>
 
+  <xsl:template mode="render-field"
+                match="*/gmd:MD_LegalConstraints/gmd:otherConstraints"
+                priority="100">
+	<dl>
+    <dt>Juridische beperkingen</dt>
+	<dd itemprop="license">
+      <xsl:value-of select="gco:CharacterString"/>
+	</dd>
+	</dl>
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/gmd:useLimitation"
+                priority="100">
+	<dl>
+    <dt>Gebruiks beperkingen</dt>
+	<dd>
+      <xsl:value-of select="gco:CharacterString" />
+	</dd>
+	</dl>
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/gmd:alternateTitle"
+                priority="100">
+	<dl>
+    <dt>Alternatieve titel</dt>
+	<dd itemprop="alternateName">
+      <xsl:apply-templates mode="render-value" select="*/gmd:alternateTitle" />
+	</dd>
+	</dl>
+  </xsl:template>
+  
+   <xsl:template mode="render-field"
+                match="*/gmd:language"
+                priority="200">		
+	<dl>
+    <dt>Taal</dt>
+	<dd itemprop="inLanguage">
+      <xsl:apply-templates mode="render-value" select="*/gmd:language" />
+	</dd>
+	</dl>
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:coupledResource"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/gmd:title"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:couplingType"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:containsOperations"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+<xsl:template mode="render-field"
+                match="*/srv:operatesOn"
+                priority="100">
+  
+				<a href="./@xlink:href">Link</a><br/>
+
+ </xsl:template>
+  
+  
+     <xsl:template mode="render-field"
+                match="*/gmd:dateStamp"
+                priority="100">		
+	<dl>
+    <dt>Datum</dt>
+	<dd itemprop="dateModified">
+      <xsl:apply-templates mode="render-value" select="*/gmd:datestamp" />
+	</dd>
+	</dl>
+  </xsl:template>
+  
+
+  
   <!-- A contact is displayed with its role as header -->
   <xsl:template mode="render-field"
                 match="*[gmd:CI_ResponsibleParty]"
@@ -199,7 +315,8 @@
             <strong>
               <xsl:choose>
                 <xsl:when test="$email!=''">
-                  <a href="mailto:{normalize-space($email)}" itemprop="email"><xsl:value-of select="$displayName"/></a>
+				  <meta content="{normalize-space($email)}" itemprop="email" />
+                  <a href="mailto:{normalize-space($email)}"><xsl:value-of select="$displayName"/></a>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="$displayName"/>
@@ -231,7 +348,9 @@
 			  </span>
             
 			  <xsl:variable name="phoneNumber">
+			  
 			  <xsl:for-each select="gmd:phone/*/gmd:voice[normalize-space(.) != '']">
+				  <xsl:if test="not(contains(gco:CharacterString,'31'))"><xsl:text>(+31)</xsl:text></xsl:if>
                   <xsl:apply-templates mode="render-value" select="."/>
               </xsl:for-each>
 			  </xsl:variable>
@@ -303,14 +422,16 @@
       </dt>
       <dd>
  
-    <xsl:variable name="mdid"><xsl:apply-templates mode="render-value" select="*"/></xsl:variable>
-	<xsl:value-of select="$mdid"/>
-	  <meta itemprop="url" content="{$baseurl}/doc/dataset/{$mdid}" />
-	  <meta content="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}" itemprop="isBasedOnUrl"/>
-	<xsl:apply-templates mode="render-value" select="@*"/>
-
-        <a class="btn btn-link" href="../../xml.metadata.get?id={$metadataId}" >
-          <i class="fa fa-file-code-o fa-2x"></i>
+		<xsl:variable name="mdid"><xsl:apply-templates mode="render-value" select="*"/></xsl:variable>
+		<xsl:value-of select="$mdid"/>
+		  <meta itemprop="url" content="{$baseurl}/doc/dataset/{$mdid}" />
+		  <meta content="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}" itemprop="isBasedOnUrl"/>
+		<xsl:apply-templates mode="render-value" select="@*"/>
+        <br/>
+		<a class="btn btn-default" href="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}">
+          <span>Originele URL</span>
+        </a>
+		<a class="btn btn-default" href="../../srv/dut/xml.metadata.get?uuid={$mdid}">
           <span>Metadata In XML</span>
         </a>
       </dd>
@@ -323,22 +444,63 @@
                 priority="100">
     <dl class="gn-link" itemprop="distribution" itemscope="itemscope" itemtype="http://schema.org/DataDownload" >
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+	  <xsl:choose>
+		  <xsl:when test="contains(*/gmd:protocol,'WMS') or contains(*/gmd:protocol,'WMTS') or contains(*/gmd:protocol,'SOS') or contains(*/gmd:protocol,'WCS')">
+			View service information
+		  </xsl:when>
+		  <xsl:otherwise>Download</xsl:otherwise>
+	  </xsl:choose>
+        
       </dt>
       <dd>
         <xsl:variable name="linkDescription">
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:description"/>
+          <xsl:apply-templates mode="render-value" select="*/gmd:description"/>
         </xsl:variable>
 
-        <a href="{*/gmd:linkage/gmd:URL}" itemprop="contentUrl"> 
-		<i><xsl:value-of select="*/gmd:protocol"/></i>
-		<span itemprop="name"><b>
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:name"/></b></span><br/>
-          <span itemprop="description"><xsl:value-of select="normalize-space($linkDescription)"/> </span>
-        			   
-        </a>
+		<xsl:variable name="dlUrl">
+		<xsl:choose>
+		  <xsl:when test="contains(*/gmd:protocol,'WMS')">
+				<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'?'))"><xsl:text>?</xsl:text></xsl:if>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'request='))">
+					<xsl:text>&amp;request=GetCapabilities&amp;service=WMS&amp;version=1.3.0</xsl:text>
+				</xsl:if>
+		  </xsl:when>
+		  <xsl:when test="contains(*/gmd:protocol,'WFS')">
+				<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'?'))"><xsl:text>?</xsl:text></xsl:if>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'request='))">
+					<xsl:text>&amp;service=WFS&amp;version=2.0.0&amp;request=GetFeature&amp;typename=</xsl:text>
+					<xsl:value-of select="normalize-space(*/gmd:name)" />
+				</xsl:if>
+		  </xsl:when>
+		  <xsl:when test="contains(*/gmd:protocol,'WMTS')">
+			<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'?'))"><xsl:text>?</xsl:text></xsl:if>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'request='))">
+					<xsl:text>&amp;request=GetCapabilities&amp;service=WMTS&amp;version=1.0.0</xsl:text>
+				</xsl:if>
+		  </xsl:when>
+		  <xsl:when test="contains(*/gmd:protocol,'SOS')">
+			<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'?'))"><xsl:text>?</xsl:text></xsl:if>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'request='))">
+					<xsl:text>&amp;request=GetCapabilities&amp;service=SOS&amp;version=2.0</xsl:text>
+				</xsl:if>
+		  </xsl:when>
+		  <xsl:when test="contains(*/gmd:protocol,'WCS')">
+			<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'?'))"><xsl:text>?</xsl:text></xsl:if>
+				<xsl:if test="not(contains(*/gmd:linkage/gmd:URL,'request='))">
+					<xsl:text>&amp;request=GetCapabilities&amp;service=WCS&amp;version=2.0.1</xsl:text>
+				</xsl:if>
+		  </xsl:when>
+		  <xsl:otherwise><xsl:value-of select="*/gmd:linkage/gmd:URL"/></xsl:otherwise>
+		  </xsl:choose>
+		</xsl:variable>
+		
+		<meta content="{$dlUrl}" itemprop="contentUrl"/>
+        <a href="{$dlUrl}" target="_blank" class="btn btn-success">Open</a>
         
       </dd>
     </dl>
@@ -349,7 +511,7 @@
     format: 'image/png',
     transparent: true,
     layers: '<xsl:value-of select="normalize-space(*/gmd:name)"/>'
-	}).addTo(map);
+	}).addTo(map).setOpacity(.75);
 	</script>
 	</xsl:if>
 	
@@ -506,9 +668,16 @@
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
 		<xsl:if test="*/gmd:dateType/*/@codeListValue!=''">(<xsl:value-of select="*/gmd:dateType/*/@codeListValue"/>)</xsl:if>
       </dt>
+	  <xsl:variable name="dt">
+	  <xsl:choose>
+	  <xsl:when test="*/gmd:dateType/*/@codeListValue='creation'"><xsl:text>dateCreated</xsl:text></xsl:when>
+	  <xsl:when test="*/gmd:dateType/*/@codeListValue='publication'"><xsl:text>datePublished</xsl:text></xsl:when>
+	  <xsl:when test="*/gmd:dateType/*/@codeListValue='modification'"><xsl:text>dateModified</xsl:text></xsl:when>
+	  </xsl:choose>
+	  </xsl:variable> 
       <dd>
 	  <i>
-	  <span itemprop="{concat('date',*/gmd:dateType/*/@codeListValue)}">
+	  <span itemprop="{$dt}">
         <xsl:apply-templates mode="render-value" select="*/gmd:date/*"/>
 	  </span>
       </i>
@@ -526,14 +695,10 @@
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
-        <ul>
           <xsl:for-each select="parent::node()/(gmd:topicCategory|gmd:obligation|gmd:pointInPixel)">
-            <li itemprop="keywords">
               <xsl:apply-templates mode="render-value"
                                    select="*"/>
-            </li>
           </xsl:for-each>
-        </ul>
       </dd>
     </dl>
   </xsl:template>
@@ -625,11 +790,6 @@
   <xsl:template mode="render-value"
                 match="gco:Date|gco:DateTime">
     <xsl:value-of select="."/>
-  </xsl:template>
-
-  <xsl:template mode="render-value"
-                match="gmd:language/gco:CharacterString">
-	<dl><dt>Taal</dt><dd itemprop="inLanguage"><xsl:value-of select="."/></dd></dl>		
   </xsl:template>
 
   <!-- ... Codelists -->
