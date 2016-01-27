@@ -215,6 +215,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/suggest!?.*" access="permitAll"/>
 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/info!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/translation/db!?.*" access="permitAll"/>
 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/oaipmh!?.*" access="permitAll"/>
 
@@ -311,6 +312,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.update!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.remove!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.enable!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.topconcept!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.concept!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.links!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.add!?.*" access="hasRole('Administrator')"/>
@@ -476,6 +479,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 
                 <!-- Metadata identifier templates -->
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadataIdentifierTemplates!?.*" access="hasRole('Editor')"/>
+
+                <!-- Retrieve public metadata as RDF  -->
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/rdf.metadata.public.get!?.*" access="permitAll"></sec:intercept-url>
 
                 <sec:intercept-url pattern="/error" access="permitAll"/>
                 <sec:intercept-url pattern="/home\?.*" access="permitAll"/>

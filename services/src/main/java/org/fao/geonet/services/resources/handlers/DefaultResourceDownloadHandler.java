@@ -155,6 +155,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                                           final String downloadDate) {
         final MetadataFileUploadRepository uploadRepository = context.getBean(MetadataFileUploadRepository.class);
         final MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
+        final String userName = context.getUserSession().getUsername();
 
         threadPool.runTask(new Runnable() {
             @Override
@@ -166,8 +167,6 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                     metadataFileUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
 
                 } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
-                    Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
-
                     // No related upload is found
                     metadataFileUpload = null;
                 }
@@ -183,7 +182,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
                     metadataFileDownload.setRequesterOrg(requesterOrg);
                     metadataFileDownload.setRequesterComments(requesterComments);
                     metadataFileDownload.setDownloadDate(downloadDate);
-                    metadataFileDownload.setUserName(context.getUserSession().getUsername());
+                    metadataFileDownload.setUserName(userName);
                     metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
 
                     repo.save(metadataFileDownload);

@@ -15,12 +15,15 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -439,6 +442,17 @@ public final class XslUtil
         return allowScripting.get() == null || allowScripting.get();
     }
 
+    public static String getUserDetails(Object contactIdentifier) {
+        String contactDetails = "";
+        int contactId = Integer.parseInt((String) contactIdentifier);
+        final ServiceContext serviceContext = ServiceContext.get();
+        User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
+        if (user != null) {
+            contactDetails = Xml.getString(user.asXml());
+        }
+        return contactDetails;
+    }
+
 	public static String reprojectCoords(Object minx, Object miny, Object maxx,
 			Object maxy, Object fromEpsg) {
 		String ret = "";
@@ -490,4 +504,15 @@ public final class XslUtil
 
 		return ret;
 	}
+
+    public static String getSiteUrl() {
+        ServiceContext context = ServiceContext.get();
+        SettingInfo si = new SettingInfo();
+        return si.getSiteUrl() + "/" + context.getBaseUrl();
+    }
+
+    public static String getLanguage() {
+        ServiceContext context = ServiceContext.get();
+        return context.getLanguage();
+    }
 }

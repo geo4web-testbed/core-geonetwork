@@ -15,18 +15,20 @@
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
   <xsl:template mode="fmtheader" match="undefined"/>
   <xsl:template mode="fmtfooter" match="undefined"/>
+  <xsl:template mode="getMetadataHeader" match="undefined"/>
+
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
   <xsl:template match="/">
 	<body>
     <xsl:apply-templates mode="fmtheader" select="$metadata"/>
-	<div class="container gn-metadata-view">
-      <article itemscope="itemscope" itemtype="http://schema.org/Dataset">
-	    <header>
-          <h1 itemprop="name"><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
-          <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
-          <!-- TODO : Add thumbnail to header -->
+    <div class="container gn-metadata-view">
+
+      <article id="gn-metadata-view-{$metadataId}">
+        <header>
+          <h1><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
+          <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
@@ -92,38 +94,35 @@
   1) section with xpath matching an element
   2) section with name create a set of fields
   -->
-  <xsl:template mode="render-view" match="section[@xpath]">
+  <xsl:template mode="render-view"
+                match="section[@xpath]">
     <div id="gn-view-{generate-id()}">
       <xsl:apply-templates mode="render-view" select="@xpath"/>
     </div>
   </xsl:template>
 
-  <xsl:template mode="render-view" match="section[@name]">
-    <xsl:variable name="title"
-            select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
+  <xsl:template mode="render-view"
+                match="section[not(@xpath)]">
     <div id="gn-section-{generate-id()}">
-      <h3 class="view-header">
-        <xsl:value-of select="$title"/>
-      </h3>
-      <xsl:apply-templates mode="render-view" select="*|@*"/>
-    </div>
-  </xsl:template>
+      <xsl:if test="@name">
+        <xsl:variable name="title"
+                      select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
-  <xsl:template mode="render-view" match="section[not(@name) and not(@xpath)]">
-    <div id="gn-section-{generate-id()}">
-      <xsl:apply-templates mode="render-view" select="*|@*"/>
+        <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
+          <xsl:attribute name="class" select="'view-header'"/>
+          <xsl:value-of select="$title"/>
+        </xsl:element>
+      </xsl:if>
+      <xsl:apply-templates mode="render-view"
+                           select="field"/>
     </div>
-  </xsl:template>
-
-  <!-- Render fields. -->
-  <xsl:template mode="render-view" match="field[@xpath]">
-    <xsl:apply-templates mode="render-view" select="@xpath"/>
   </xsl:template>
 
 
   <!-- Render metadata elements defined by XPath -->
-  <xsl:template mode="render-view" match="@xpath">
+  <xsl:template mode="render-view"
+                match="field[not(template)]">
     <xsl:param name="base" select="$metadata"/>
 
     <!-- Matching nodes -->
@@ -131,37 +130,63 @@
 		<xsl:if test="$base">
       <saxon:call-template name="{concat('evaluate-', $schema)}">
         <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="in" select="concat('/../', .)"/>
+        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
       </saxon:call-template>
 	  </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="fieldName">
-      <xsl:if test="../@name">
-        <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, ../@name)"/>
+      <xsl:if test="@name">
+        <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
       </xsl:if>
     </xsl:variable>
-
-    <!-- A field may be based on a template -->
-    <!--<xsl:variable name="subFields" select="../template/values/key"/>-->
 
     <xsl:for-each select="$nodes">
       <xsl:apply-templates mode="render-field">
         <xsl:with-param name="fieldName" select="$fieldName"/>
       </xsl:apply-templates>
+    </xsl:for-each>
+  </xsl:template>
 
-      <!--<xsl:choose>
-        <xsl:when test="$subFields">
-          <xsl:variable name="currentNode" select="."/>
-          <xsl:for-each select="$subFields">
-            <xsl:apply-templates mode="render-view" select="@xpath">
-              <xsl:with-param name="base" select="$currentNode"/>
-            </xsl:apply-templates>
-          </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>
-        </xsl:otherwise>
-      </xsl:choose>-->
+
+
+  <xsl:template mode="render-view"
+                match="field[template]"
+                priority="2">
+    <xsl:param name="base" select="$metadata"/>
+    <xsl:if test="@name">
+      <xsl:variable name="title"
+                    select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
+
+      <xsl:element name="h{3 + 1 + count(ancestor-or-self::*[name(.) = 'section'])}">
+        <xsl:attribute name="class" select="'view-header'"/>
+        <xsl:value-of select="$title"/>
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:variable name="fieldXpath"
+                  select="@xpath"/>
+    <xsl:for-each select="template/values/key">
+      <xsl:variable name="nodes">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in"
+                          select="concat('/../', $fieldXpath, '/',
+                           replace(@xpath, '/gco:CharacterString', ''))"/>
+        </saxon:call-template>
+      </xsl:variable>
+
+      <xsl:variable name="fieldName">
+        <xsl:if test="@label">
+          <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, @label)"/>
+        </xsl:if>
+      </xsl:variable>
+
+      <xsl:for-each select="$nodes">
+        <xsl:apply-templates mode="render-field">
+          <xsl:with-param name="fieldName" select="$fieldName"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
 
