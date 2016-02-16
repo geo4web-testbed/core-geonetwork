@@ -431,7 +431,7 @@
 		<a class="btn btn-default" href="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}">
           <span>Originele URL</span>
         </a>
-		<a class="btn btn-default" href="../../srv/dut/xml.metadata.get?uuid={$mdid}">
+		<a class="btn btn-default" href="../srv/dut/xml.metadata.get?uuid={$mdid}">
           <span>Metadata In XML</span>
         </a>
       </dd>
