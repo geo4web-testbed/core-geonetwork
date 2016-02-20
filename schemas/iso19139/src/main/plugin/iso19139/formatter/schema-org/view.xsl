@@ -154,7 +154,7 @@
 	</dl>
   </xsl:template>
   
-      <!-- A contact is displayed with its role as header -->
+     
   <xsl:template mode="render-field"
                 match="*/gmd:purpose"
                 priority="100">
@@ -166,7 +166,7 @@
 	</dl>
   </xsl:template>
   
-    <!-- A contact is displayed with its role as header -->
+    
   <xsl:template mode="render-field"
                 match="*/gmd:abstract"
                 priority="100">
@@ -224,9 +224,40 @@
   
   <xsl:template mode="render-field"
                 match="*/srv:coupledResource"
+                priority="1000">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:SV_CoupledResource"
+                priority="1000">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:couplingType"
                 priority="100">		
 			<!-- skip -->
   </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:containsOperations"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:SV_OperationMetadata"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
+  <xsl:template mode="render-field"
+                match="*/srv:operatesOn"
+                priority="100">		
+			<!-- skip -->
+  </xsl:template>
+  
   
   <xsl:template mode="render-field"
                 match="*/gmd:title"
@@ -246,12 +277,33 @@
 			<!-- skip -->
   </xsl:template>
   
+  <!-- 
+  <srv:operatesOn uuidref="identifier van eigen dataset" xlink:href="http://www.nationaalgeoregister.nl/geonetwork/srv/en/csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id="/>
+</srv:SV_ServiceIdentification>
+</gmd:identificationInfo>
+ -->
+    
 <xsl:template mode="render-field"
                 match="*/srv:operatesOn"
-                priority="100">
-  
-				<a href="./@xlink:href">Link</a><br/>
+                priority="1000">
+  <div itemprop="dataset" itemscope="itemscope" itemtype="http://schema.org/Dataset">
+   <meta itemprop="url" content="{$baseurl}/doc/dataset/{./@uuidref}" />
+   
+   <xsl:variable name="dsUUID">
+   <xsl:choose>
+   <xsl:when test="contains(lower-case(./@xlink:href),'id=')">
+  	 <xsl:value-of select="tokenize(tokenize(lower-case(./@xlink:href),'id=')[2],'&amp;')[1]"/>
+   </xsl:when>
+   <xsl:otherwise>
+   	<xsl:value-of select="./@uuidref"/>
+   </xsl:otherwise>	
+   </xsl:choose>
+   </xsl:variable>
 
+   <xsl:if test="string-length($dsUUID)>0">
+     <a href="{$baseurl}/doc/dataset/{$dsUUID}" class="btn btn-sm btn-primary">Dataset in Catalogus</a><br/>
+   </xsl:if>
+ </div>
  </xsl:template>
   
   
@@ -431,7 +483,7 @@
 		<a class="btn btn-default" href="http://www.nationaalgeoregister.nl/geonetwork/resource/{$mdid}">
           <span>Originele URL</span>
         </a>
-		<a class="btn btn-default" href="../srv/dut/xml.metadata.get?uuid={$mdid}">
+		<a class="btn btn-default" href="{$baseurl}/srv/dut/xml.metadata.get?uuid={$mdid}">
           <span>Metadata In XML</span>
         </a>
       </dd>
@@ -847,18 +899,31 @@
   </xsl:template>
   <xsl:template mode="render-value"
                 match="@*"/>
-    <xsl:template mode="fmtheader"
-                match="*">
+   
+				
 	
-	<link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
-	<style>
+					
+  <!-- Starting point -->
+  <xsl:template match="/" priority="100">
+  
+  <html>
+  <head>
+  <title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title>
+  <link rel="alternate" hreflang="nl" href="http://opendatacat.net/" />
+  <link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
+  <style>
 	.toggler,.view-outline,.summary-links-associated-link { display:none }
 	.coord { float:left;width:25%; padding:2px; padding: 3px; }
 	.extent img { clear:both; padding: 5px; }
 	header { padding-top:50px; }
-	</style>
+  </style>
+  </head>
+  
+	<body>
+     
 	
-<nav class="navbar navbar-default" style="margin-bottom:0px;">
+	
+	<nav class="navbar navbar-default" style="margin-bottom:0px;">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -867,12 +932,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../../srv/dut/catalog.search">Geo4web #4</a>
+          <a class="navbar-brand" href="{$baseurl}/srv/dut/catalog.search">Opendatacat</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="../../srv/dut/catalog.search#/search">Zoeken</a></li>
-			<li><a href="../../srv/dut/catalog.search#/map">Kaart</a></li>
+            <li><a href="{$baseurl}/srv/dut/catalog.search#/search">Zoeken</a></li>
+			<li><a href="{$baseurl}/srv/dut/catalog.search#/map">Kaart</a></li>
             <li><a href="http://www.geonovum.nl/onderwerp-artikel/testbed-locatie-data-het-web" target="_top">Over</a></li>
             
           </ul>
@@ -883,9 +948,44 @@
 	<div id="map" class="hidden-xs" style="width:100%;height:250px;background-color:#ddd;border:1px solid #999;">
 	<br/>
 	</div></div></div>
-  </xsl:template>
-				
-<xsl:template mode="fmtfooter" match="*">	
+	
+	
+    <div class="container gn-metadata-view">
+
+
+<xsl:variable name="oType" select="$metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
+
+<xsl:variable name="schemaType">
+<xsl:choose>
+<xsl:when test="$oType='dataset'">http://schema.org/Dataset</xsl:when>
+<xsl:when test="$oType='series'">http://schema.org/DataCatalog</xsl:when>
+<xsl:when test="$oType='service'">http://schema.org/DataCatalog</xsl:when>
+<xsl:when test="$oType='application'">http://schema.org/SoftwareApplication</xsl:when>
+<xsl:when test="$oType='collectionHardware'">http://logd.tw.rpi.edu/web_observatory_tool</xsl:when>
+<xsl:when test="$oType='nonGeographicDataset'">http://schema.org/Dataset</xsl:when>
+<xsl:when test="$oType='dimensionGroup'">http://schema.org/Dataset</xsl:when>
+<xsl:when test="$oType='featureType'">http://schema.org/Dataset</xsl:when>
+<xsl:when test="$oType='model'">http://schema.org/APIReference</xsl:when>
+<xsl:when test="$oType='tile'">http://schema.org/Dataset</xsl:when>
+<xsl:when test="$oType='fieldSession'">http://logd.tw.rpi.edu/web_observatory_project</xsl:when>
+<xsl:when test="$oType='collectionSession'">http://logd.tw.rpi.edu/web_observatory_project</xsl:when>
+<xsl:otherwise>http://schema.org/Thing</xsl:otherwise>
+</xsl:choose>
+</xsl:variable>
+
+
+      <article id="gn-metadata-view-{$metadataId}" itemscope="itemscope" itemtype="{$schemaType}">
+        <header>
+          <h1 itemprop="name" ><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
+        </header>
+        <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
+        
+        <footer>
+
+        </footer>
+      </article>
+    </div>
+
 <script>
   (function(i,s,o,g,r,a,m) { i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
   (i[r].q=i[r].q||[]).push(arguments) } ,i[r].l=1*new Date();a=s.createElement(o),
@@ -894,6 +994,9 @@
   ga('create', 'UA-71094958-1', 'auto');
   ga('send', 'pageview');
 </script>
-</xsl:template>		
+	</body>
+</html>
+  </xsl:template>					
+					
 							
 </xsl:stylesheet>
