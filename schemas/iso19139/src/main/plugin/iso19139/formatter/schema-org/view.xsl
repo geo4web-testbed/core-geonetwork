@@ -14,10 +14,14 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:variable name="baseurl" select="'http://opendatacat.net/geonetwork-geo4web'"/>	
+
+
+
+  <xsl:variable name="baseurl" select="xslUtils:getSiteUrl()"/>	
   
   <!-- Load the editor configuration to be able
   to render the different views -->
@@ -252,11 +256,7 @@
 			<!-- skip -->
   </xsl:template>
   
-  <xsl:template mode="render-field"
-                match="*/srv:operatesOn"
-                priority="100">		
-			<!-- skip -->
-  </xsl:template>
+
   
   
   <xsl:template mode="render-field"
@@ -277,15 +277,11 @@
 			<!-- skip -->
   </xsl:template>
   
-  <!-- 
-  <srv:operatesOn uuidref="identifier van eigen dataset" xlink:href="http://www.nationaalgeoregister.nl/geonetwork/srv/en/csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id="/>
-</srv:SV_ServiceIdentification>
-</gmd:identificationInfo>
- -->
+
     
 <xsl:template mode="render-field"
                 match="*/srv:operatesOn"
-                priority="1000">
+                priority="105">
   <div itemprop="dataset" itemscope="itemscope" itemtype="http://schema.org/Dataset">
    <meta itemprop="url" content="{$baseurl}/doc/dataset/{./@uuidref}" />
    
@@ -300,8 +296,13 @@
    </xsl:choose>
    </xsl:variable>
 
+<xsl:variable name="mdTitle" select="xslUtils:getIndexField(null, $dsUUID, 'title','dut')"/>
+<xsl:variable name="mdTitle2" select="xslUtils:getIndexField(null, $dsUUID, '_defaultTitle','dut')"/>
+
+
    <xsl:if test="string-length($dsUUID)>0">
-     <a href="{$baseurl}/doc/dataset/{$dsUUID}" class="btn btn-sm btn-primary">Dataset in Catalogus</a><br/>
+     <a href="{$baseurl}/doc/dataset/{$dsUUID}" class="btn btn-sm btn-primary">Dataset in Catalogus
+     <xsl:value-of select="$mdTitle"/> 2 <xsl:value-of select="$mdTitle2"/></a><br/>
    </xsl:if>
  </div>
  </xsl:template>
@@ -485,9 +486,23 @@
         </a>
 		<a class="btn btn-default" href="{$baseurl}/srv/dut/xml.metadata.get?uuid={$mdid}">
           <span>Metadata In XML</span>
+        </a> <a class="btn btn-default" href="{$baseurl}/srv/dut/rdf.metadata.get?uuid={$mdid}">
+          <span>Metadata In RDF/XML</span>
         </a>
       </dd>
     </dl>
+    
+    <!-- these uuid's are hardcoded links to aan and adressen metadata-->
+        <xsl:if test="mdid='b105faf5-83f7-4fd9-8a5a-7b804fabc0b6' or mdid='aef01552-615d-4173-924d-4dbbde34b515' or mdid='4fa03182-df71-4c39-87da-e7d5c0b82d88' or mdid='02f0a3f1-f918-4e3c-b150-a7265ca8ee4a' ">
+			<meta content="http://www.ldproxy.net/aan/aan" itemprop="contentUrl"/>
+        	<a href="http://www.ldproxy.net/aan/aan" target="_blank" class="btn btn-success">Browse data</a>		
+		</xsl:if>
+		
+		<xsl:if test="mdid='76091be7-358a-4a44-8182-b4139c96c6a4' or mdid='3a97fbe4-2b0d-4e9c-9644-276883400dd7' or mdid='4074b3c3-ca85-45ad-bc0d-b5fca8540z0b' or mdid='06b6c650-cdb1-11dd-ad8b-0800200c9a77' ">
+			<meta content="http://www.ldproxy.net/bag/inspireadressen" itemprop="contentUrl"/>
+        	<a href="http://www.ldproxy.net/bag/inspireadressen" target="_blank" class="btn btn-success">Browse data</a>		
+		</xsl:if>
+		
   </xsl:template>
 
   <!-- Linkage -->
@@ -551,8 +566,10 @@
 		  </xsl:choose>
 		</xsl:variable>
 		
+		
+		
 		<meta content="{$dlUrl}" itemprop="contentUrl"/>
-        <a href="{$dlUrl}" target="_blank" class="btn btn-success">Open</a>
+        <a href="{$dlUrl}" target="_blank" class="btn btn-success">Download data</a>
         
       </dd>
     </dl>
