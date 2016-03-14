@@ -489,19 +489,21 @@
         </a> <a class="btn btn-default" href="{$baseurl}/srv/dut/rdf.metadata.get?uuid={$mdid}">
           <span>Metadata In RDF/XML</span>
         </a>
+        
+        <!-- these uuid's are hardcoded links to aan and adressen metadata-->
+        <xsl:if test="$mdid='b105faf5-83f7-4fd9-8a5a-7b804fabc0b6' or $mdid='aef01552-615d-4173-924d-4dbbde34b515' or $mdid='4fa03182-df71-4c39-87da-e7d5c0b82d88' or $mdid='02f0a3f1-f918-4e3c-b150-a7265ca8ee4a' ">
+			<meta content="http://www.ldproxy.net/aan/aan" itemprop="contentUrl"/>
+        	<br/><a href="http://www.ldproxy.net/aan/aan" target="_blank" class="btn btn-success">Browse data</a>		
+		</xsl:if>
+		
+		<xsl:if test="$mdid='76091be7-358a-4a44-8182-b4139c96c6a4' or $mdid='3a97fbe4-2b0d-4e9c-9644-276883400dd7' or $mdid='4074b3c3-ca85-45ad-bc0d-b5fca8540z0b' or $mdid='06b6c650-cdb1-11dd-ad8b-0800200c9a77' ">
+			<meta content="http://www.ldproxy.net/bag/inspireadressen" itemprop="contentUrl"/>
+        	<br/><a href="http://www.ldproxy.net/bag/inspireadressen" target="_blank" class="btn btn-success">Browse data</a>		
+		</xsl:if>
       </dd>
     </dl>
     
-    <!-- these uuid's are hardcoded links to aan and adressen metadata-->
-        <xsl:if test="mdid='b105faf5-83f7-4fd9-8a5a-7b804fabc0b6' or mdid='aef01552-615d-4173-924d-4dbbde34b515' or mdid='4fa03182-df71-4c39-87da-e7d5c0b82d88' or mdid='02f0a3f1-f918-4e3c-b150-a7265ca8ee4a' ">
-			<meta content="http://www.ldproxy.net/aan/aan" itemprop="contentUrl"/>
-        	<a href="http://www.ldproxy.net/aan/aan" target="_blank" class="btn btn-success">Browse data</a>		
-		</xsl:if>
-		
-		<xsl:if test="mdid='76091be7-358a-4a44-8182-b4139c96c6a4' or mdid='3a97fbe4-2b0d-4e9c-9644-276883400dd7' or mdid='4074b3c3-ca85-45ad-bc0d-b5fca8540z0b' or mdid='06b6c650-cdb1-11dd-ad8b-0800200c9a77' ">
-			<meta content="http://www.ldproxy.net/bag/inspireadressen" itemprop="contentUrl"/>
-        	<a href="http://www.ldproxy.net/bag/inspireadressen" target="_blank" class="btn btn-success">Browse data</a>		
-		</xsl:if>
+    
 		
   </xsl:template>
 
