@@ -123,13 +123,18 @@
 
 	<rule> 
         <condition name="Accept">application/rdf\+xml</condition> 
-        <from>^/doc/dataset/(.*)/(.*)</from> 
+        <from>^/doc/dataset/(.*)$</from> 
+        <to type="forward">/srv/dut/rdf.metadata.get?uuid=$1</to> 
+    </rule> 
+
+	<rule> 
+        <from>^/dcat/(.*)$</from> 
         <to type="forward">/srv/dut/rdf.metadata.get?uuid=$1</to> 
     </rule> 
 
     <rule> 
         <condition name="Accept">application/json</condition> 
-        <from>^/doc/dataset/(.*)/(.*)</from> 
+        <from>^/doc/dataset/(.*)$</from> 
         <to type="forward">/srv/dut/xml.metadata.get?_content_type=json&amp;uuid=$1</to> 
     </rule> 
 
