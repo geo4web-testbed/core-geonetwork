@@ -255,10 +255,7 @@
                 priority="100">		
 			<!-- skip -->
   </xsl:template>
-  
 
-  
-  
   <xsl:template mode="render-field"
                 match="*/gmd:title"
                 priority="100">		
@@ -415,6 +412,7 @@
 			  
 			  <xsl:variable name="CPUrl">
 				  <xsl:for-each select="gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL[normalize-space(.) != '']">
+				  	<xsl:if test="not(starts-with(., 'http'))">http://</xsl:if>
 					  <xsl:value-of select="."/>
 				  </xsl:for-each>
 			  </xsl:variable>
@@ -527,6 +525,7 @@
         </xsl:variable>
 
 		<xsl:variable name="dlUrl">
+		<xsl:if test="not(starts-with(*/gmd:linkage/gmd:URL, 'http'))">http://</xsl:if>
 		<xsl:choose>
 		  <xsl:when test="contains(*/gmd:protocol,'WMS')">
 				<xsl:value-of select="*/gmd:linkage/gmd:URL"/>
@@ -853,7 +852,13 @@
   <!-- ... URL -->
   <xsl:template mode="render-value"
                 match="gmd:URL">
-    <a href="{.}"><xsl:value-of select="."/></a>
+    
+    <xsl:variable name="myURL">
+    <xsl:if test="not(starts-with(., 'http'))">http://</xsl:if>
+    <xsl:value-of select="."/>
+    </xsl:variable>            
+                
+    <a href="{$myURL}" target="_blank"><xsl:value-of select="$myURL"/></a>
   </xsl:template>
 
   <!-- ... Dates - formatting is made on the client side by the directive  -->
@@ -928,6 +933,11 @@
   <html>
   <head>
   <title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title>
+  <meta name="description">
+  <xsl:attribute name="content">
+  <xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/>
+  </xsl:attribute>
+  </meta>
   <link rel="alternate" hreflang="nl" href="http://opendatacat.net/" />
   <link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
   <style>
@@ -993,7 +1003,7 @@
 </xsl:variable>
 
 
-      <article id="gn-metadata-view-{$metadataId}" itemscope="itemscope" itemtype="{$schemaType}">
+      <article id="{$metadataUuid}" itemscope="itemscope" itemtype="{$schemaType}">
         <header>
           <h1 itemprop="name" ><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></h1>
         </header>

@@ -9,6 +9,8 @@
                 select="/root/info/record/datainfo/schemaid"/>
   <xsl:variable name="metadataId"
                 select="/root/info/record/id"/>
+  <xsl:variable name="metadataUuid"
+                select="/root/info/record/uuid"/>
 
   <xsl:variable name="schemaCodelists"><null/></xsl:variable>
 
