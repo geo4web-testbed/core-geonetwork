@@ -933,11 +933,8 @@
   <html>
   <head>
   <title><xsl:apply-templates mode="getMetadataTitle" select="$metadata"/></title>
-  <meta name="description">
-  <xsl:attribute name="content">
-  <xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/>
-  </xsl:attribute>
-  </meta>
+  <xsl:variable name="abs"><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></xsl:variable>
+  <meta name="description" content="{normalize-space($abs)}"/>
   <link rel="alternate" hreflang="nl" href="http://opendatacat.net/" />
   <link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"/> 
   <style>
